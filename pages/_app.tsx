@@ -1,12 +1,15 @@
-import "../styles/globals.css";
-import { AppProps } from "next/app";
-import { useRouter } from "next/router";
+import '../styles/globals.css';
+import { AppProps } from 'next/app';
+import { useRouter } from 'next/router';
+import { NotificationProvider } from '../components/Notification';
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
   const router = useRouter();
   return (
     <>
-      <Component {...pageProps} />
+      <NotificationProvider>
+        <Component {...pageProps} />
+      </NotificationProvider>
     </>
   );
 };

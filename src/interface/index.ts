@@ -10,21 +10,21 @@ export type User = {
 export type Quiz = {
   id: number;
   image: string;
-  correctId: number;
-  correctRate: number;
+  correct_id: number;
+  correct_rate: number;
   level: number;
 };
 
 export type Option = {
   id: number;
   name: string;
-  quizId: number;
+  quiz_id: number;
 };
 
 export type Answer = {
   id: number;
-  userId: number;
-  quizId: number;
+  user_id: number;
+  quiz_id: number;
   correct: boolean;
-  answeredOptionId: number;
+  answered_option_id: number;
 };
