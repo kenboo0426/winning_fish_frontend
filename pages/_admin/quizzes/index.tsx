@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 import React from 'react';
-import { index, create, show, destory } from '../../../src/api/quiz';
+import { index, create, show, destory, update } from '../../../src/api/quiz';
 import { useShowError } from '../../../src/hooks/error';
 import { Quiz } from '../../../src/interface';
 import { Button as AAAA } from 'react-bootstrap';
@@ -52,6 +52,20 @@ const QuizzesPage: React.FC = () => {
     }
   }, [showError]);
 
+  const updateQuiz = React.useCallback(async () => {
+    try {
+      const params = {
+        image: 'krtortgomre',
+        correct_id: 1,
+        correct_rate: 1,
+        level: 3,
+      };
+      const response = await update(18, params);
+    } catch (error) {
+      showError(error);
+    }
+  }, [showError]);
+
   console.log(quizzes, 'quizzes');
 
   React.useEffect(() => {
@@ -64,6 +78,7 @@ const QuizzesPage: React.FC = () => {
         fetch
       </AAAA>
       <Button onClick={deleteQuiz}>削除</Button>
+      <Button onClick={updateQuiz}>更新</Button>
       <Button onClick={handleCreateQuiz}>作成</Button>
     </>
   );
