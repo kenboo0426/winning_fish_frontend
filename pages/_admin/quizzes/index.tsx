@@ -1,11 +1,72 @@
+import { Button } from '@mui/material';
 import React from 'react';
+import { index, create, show, destory } from '../../../src/api/quiz';
+import { useShowError } from '../../../src/hooks/error';
 import { Quiz } from '../../../src/interface';
+import { Button as AAAA } from 'react-bootstrap';
 
 const QuizzesPage: React.FC = () => {
-  const [quizzes, setQuizzes] = React.useState<Quiz[]>();
+  const [quizzes, setQuizzes] = React.useState<Quiz[]>([]);
+  const [createQuiz, setCreateQuiz] = React.useState<Quiz>();
+  const showError = useShowError();
 
-  const fetchQuizzes = React.useCallback(() => {}, []);
-  return <>sss</>;
+  const fetchQuizzes = React.useCallback(async () => {
+    try {
+      const response = await index();
+      setQuizzes(response);
+    } catch (error) {
+      showError(error);
+    }
+  }, [showError]);
+
+  const handleCreateQuiz = React.useCallback(async () => {
+    try {
+      const params = {
+        image: 'aaaa',
+        correct_id: 1,
+        correct_rate: 1,
+        level: 1,
+      };
+      const response = await create(params);
+      setQuizzes([...quizzes, response]);
+    } catch (err) {
+      showError(err);
+    }
+  }, [showError, quizzes, setQuizzes]);
+
+  const fetchQuiz = React.useCallback(async () => {
+    try {
+      const response = await show(5);
+      console.log(response);
+    } catch (error) {
+      showError(error);
+    }
+  }, [showError]);
+
+  const deleteQuiz = React.useCallback(async () => {
+    try {
+      const response = await destory(17);
+      console.log(response);
+    } catch (error) {
+      showError(error);
+    }
+  }, [showError]);
+
+  console.log(quizzes, 'quizzes');
+
+  React.useEffect(() => {
+    fetchQuizzes();
+  }, [fetchQuizzes]);
+
+  return (
+    <>
+      <AAAA variant="primary" onClick={fetchQuiz}>
+        fetch
+      </AAAA>
+      <Button onClick={deleteQuiz}>削除</Button>
+      <Button onClick={handleCreateQuiz}>作成</Button>
+    </>
+  );
 };
 
 export default QuizzesPage;

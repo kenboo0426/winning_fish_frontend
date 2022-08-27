@@ -6,8 +6,8 @@ const formatter = new Jsona();
 
 export const index = async () => {
   const response = await apiClient.get('/quizzes');
-  const data = formatter.deserialize(response) as Quiz[];
 
+  const data = response.data as Quiz[];
   return data;
 };
 
@@ -19,16 +19,16 @@ type CreateQuizParams = {
 };
 
 export const create = async (params: CreateQuizParams) => {
-  const response = await apiClient.post('/quiz/create', params);
+  const response = await apiClient.post('/quiz', params);
 
-  const data = formatter.deserialize(response) as Quiz;
+  const data = response.data as Quiz;
   return data;
 };
 
 export const show = async (id: number) => {
-  const response = await apiClient.get(`/quiz${id}`);
+  const response = await apiClient.get(`/quiz/${id}`);
 
-  const data = formatter.deserialize(response) as Quiz;
+  const data = response.data as Quiz;
   return data;
 };
 
