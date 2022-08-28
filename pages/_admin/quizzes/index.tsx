@@ -4,11 +4,13 @@ import { index, create, show, destory, update } from '../../../src/api/quiz';
 import { useShowError } from '../../../src/hooks/error';
 import { Quiz } from '../../../src/interface';
 import { Button as AAAA } from 'react-bootstrap';
+import { useRouter } from 'next/router';
 
 const QuizzesPage: React.FC = () => {
   const [quizzes, setQuizzes] = React.useState<Quiz[]>([]);
   const [createQuiz, setCreateQuiz] = React.useState<Quiz>();
   const showError = useShowError();
+  const router = useRouter();
 
   const fetchQuizzes = React.useCallback(async () => {
     try {
@@ -66,8 +68,6 @@ const QuizzesPage: React.FC = () => {
     }
   }, [showError]);
 
-  console.log(quizzes, 'quizzes');
-
   React.useEffect(() => {
     fetchQuizzes();
   }, [fetchQuizzes]);
@@ -79,7 +79,7 @@ const QuizzesPage: React.FC = () => {
       </AAAA>
       <Button onClick={deleteQuiz}>削除</Button>
       <Button onClick={updateQuiz}>更新</Button>
-      <Button onClick={handleCreateQuiz}>作成</Button>
+      <Button onClick={() => router.push('/_admin/quizzes/new')}>作成</Button>
     </>
   );
 };

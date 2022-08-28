@@ -11,7 +11,6 @@ export const index = async () => {
 type QuizParams = {
   image: string;
   correct_id: number;
-  correct_rate: number;
   level: number;
 };
 
