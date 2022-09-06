@@ -1,11 +1,11 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import React from 'react';
-import Image from 'next/image';
 import { useShowError } from '../src/hooks/error';
-import { create } from '../src/api/quiz';
+import { update } from '../src/api/quiz';
 import { uploadImage } from '../src/api/uploadImage';
 import { useRouter } from 'next/router';
-import { Form, InputGroup } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
+import { Quiz } from '../src/interface';
 
 type QuizWithOption = {
   image?: string;
@@ -17,15 +17,11 @@ type QuizWithOption = {
   option4?: string;
 };
 
-const QuizCreateForm: React.FC<QuizWithOption> = ({
-  image,
-  correct_id,
-  level,
-  option1,
-  option2,
-  option3,
-  option4,
-}) => {
+type Props = {
+  quiz: Quiz;
+};
+
+const QuizUpdateForm: React.FC<Props> = ({ quiz }) => {
   const router = useRouter();
   const {
     register,
@@ -34,18 +30,18 @@ const QuizCreateForm: React.FC<QuizWithOption> = ({
     formState: { errors },
   } = useForm<QuizWithOption>({
     defaultValues: {
-      image: image,
-      correct_id: correct_id,
-      level: level,
-      option1: option1,
-      option2: option2,
-      option3: option3,
-      option4: option4,
+      image: quiz.image,
+      correct_id: quiz.correct_id,
+      level: quiz.level,
+      option1: quiz.options[0].name,
+      option2: quiz.options[1].name,
+      option3: quiz.options[2].name,
+      option4: quiz.options[3].name,
     },
   });
   const showError = useShowError();
   const [quizImage, setQuizImage] = React.useState<File>();
-  const [createObjectURL, setCreateObjectURL] = React.useState(image);
+  const [createObjectURL, setCreateObjectURL] = React.useState(quiz.image);
 
   const handleChangeQuizImage = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,14 +56,12 @@ const QuizCreateForm: React.FC<QuizWithOption> = ({
   );
   const onSubmit: SubmitHandler<QuizWithOption> = React.useCallback(
     async (data) => {
-      if (!quizImage) return;
-
       try {
         let imageUrl;
-        if (createObjectURL) {
-          imageUrl = createObjectURL;
-        } else {
+        if (quizImage) {
           imageUrl = await uploadImage(quizImage, 'quiz');
+        } else {
+          imageUrl = createObjectURL;
         }
         const params = {
           image: imageUrl!,
@@ -79,13 +73,13 @@ const QuizCreateForm: React.FC<QuizWithOption> = ({
             { name: data.option4! },
           ],
         };
-        await create(params);
+        await update(quiz.id, params);
         router.push('/_admin/quizzes');
       } catch (err) {
         showError(err);
       }
     },
-    [showError, quizImage, router, createObjectURL]
+    [showError, quizImage, router, createObjectURL, quiz.id]
   );
 
   return (
@@ -94,11 +88,6 @@ const QuizCreateForm: React.FC<QuizWithOption> = ({
       <form onSubmit={handleSubmit(onSubmit)}>
         {errors.image && <span>This field is required</span>}
         <input type="file" accept="image/*" onChange={handleChangeQuizImage} />
-        {/* <Image
-          alt="fish img"
-          className="flex justify-center items-center"
-          src={createObjectURL}
-        /> */}
         <img
           className="flex justify-center items-center"
           src={createObjectURL}
@@ -132,4 +121,4 @@ const QuizCreateForm: React.FC<QuizWithOption> = ({
   );
 };
 
-export default QuizCreateForm;
+export default QuizUpdateForm;
