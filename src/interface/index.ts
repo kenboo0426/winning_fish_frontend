@@ -13,6 +13,7 @@ export type Quiz = {
   correct_id: number;
   correct_rate: number;
   level: number;
+  options: Option[];
 };
 
 export type Option = {
