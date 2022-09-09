@@ -9,11 +9,11 @@ export type User = {
 
 export type Quiz = {
   id: number;
-  image: string;
   correct_id: number;
   correct_rate: number;
   level: number;
   options: Option[];
+  quiz_images: QuizImage[];
 };
 
 export type Option = {
@@ -28,4 +28,11 @@ export type Answer = {
   quiz_id: number;
   correct: boolean;
   answered_option_id: number;
+};
+
+export type QuizImage = {
+  id: number;
+  name: string;
+  quiz_id: number;
+  progress_id: number;
 };
