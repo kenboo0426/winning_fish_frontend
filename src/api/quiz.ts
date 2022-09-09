@@ -9,10 +9,13 @@ export const index = async () => {
 };
 
 type QuizParams = {
-  image: string;
   level: number;
   options: {
     name: string;
+  }[];
+  quiz_images: {
+    name: string;
+    progress_id: number;
   }[];
 };
 

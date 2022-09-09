@@ -1,7 +1,10 @@
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../utils/firebase';
 
-export const uploadImage = async (image: File, dirname: string) => {
+export const uploadImage = async (
+  image: File,
+  dirname: string
+): Promise<string> => {
   let uploadResult = '';
 
   if (image.name) {

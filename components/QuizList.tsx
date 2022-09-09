@@ -37,7 +37,7 @@ const QuizList: React.FC<Props> = ({ quizzes, setQuizzes }) => {
     <>
       {quizzes.map((quiz) => {
         return (
-          <>
+          <React.Fragment key={quiz.id}>
             <Card className="my-3">
               <Card.Header>No.{quiz.id}</Card.Header>
               <Card.Body>
@@ -72,7 +72,7 @@ const QuizList: React.FC<Props> = ({ quizzes, setQuizzes }) => {
                 </div>
               </Card.Body>
             </Card>
-          </>
+          </React.Fragment>
         );
       })}
     </>

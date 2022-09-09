@@ -91,6 +91,7 @@ const QuizUpdateForm: React.FC<Props> = ({ quiz }) => {
         <img
           className="flex justify-center items-center"
           src={createObjectURL}
+          style={{ width: 300, height: 230 }}
         />
         <Form.Select {...register('level', { required: true })}>
           <option value="1">Basic</option>
