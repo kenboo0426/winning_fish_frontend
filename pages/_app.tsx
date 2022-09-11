@@ -4,9 +4,16 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { NotificationProvider } from '../components/Notification';
 import styles from '../styles/Home.module.css';
-import { UserAuthProvider } from '../src/utils/userAuth';
+import { useFetchCurrentUser, UserAuthProvider } from '../src/utils/userAuth';
+import React from 'react';
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
+  // const fetchCurrentUser = useFetchCurrentUser();
+
+  // React.useEffect(() => {
+  //   fetchCurrentUser();
+  // }, [fetchCurrentUser]);
+
   return (
     <div className={styles.container}>
       <Head>
