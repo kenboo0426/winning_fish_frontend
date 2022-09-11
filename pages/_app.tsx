@@ -4,6 +4,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { NotificationProvider } from '../components/Notification';
 import styles from '../styles/Home.module.css';
+import { UserAuthProvider } from '../src/utils/userAuth';
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
@@ -20,7 +21,9 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
         />
       </Head>
       <NotificationProvider>
-        <Component {...pageProps} />
+        <UserAuthProvider>
+          <Component {...pageProps} />
+        </UserAuthProvider>
       </NotificationProvider>
     </div>
   );
