@@ -4,16 +4,17 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { NotificationProvider } from '../components/Notification';
 import styles from '../styles/Home.module.css';
-import { useFetchCurrentUser, UserAuthProvider } from '../src/utils/userAuth';
+import {
+  useCurrentUser,
+  useCurrentUserLoading,
+  UserAuthProvider,
+} from '../src/utils/userAuth';
 import React from 'react';
+import { WebSocketProvider } from '../src/utils/webSocket';
+import { useRouter } from 'next/router';
+import Navbar from '../components/Navbar';
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
-  // const fetchCurrentUser = useFetchCurrentUser();
-
-  // React.useEffect(() => {
-  //   fetchCurrentUser();
-  // }, [fetchCurrentUser]);
-
   return (
     <div className={styles.container}>
       <Head>
@@ -29,11 +30,29 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
       </Head>
       <NotificationProvider>
         <UserAuthProvider>
-          <Component {...pageProps} />
+          <WebSocketProvider>
+            <MyappInit />
+            <Navbar />
+            <Component {...pageProps} />
+          </WebSocketProvider>
         </UserAuthProvider>
       </NotificationProvider>
     </div>
   );
+};
+
+const MyappInit: React.FC = () => {
+  const currentUser = useCurrentUser();
+  const router = useRouter();
+  const currentUserLoading = useCurrentUserLoading();
+
+  // React.useEffect(() => {
+  //   if (!currentUserLoading && !currentUser) {
+  //     router.push('/login');
+  //   }
+  // }, [router, currentUser, currentUserLoading]);
+
+  return null;
 };
 
 export default MyApp;
