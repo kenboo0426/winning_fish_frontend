@@ -7,7 +7,10 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
   const currentUser = useCurrentUser();
 
-  if (currentUser) router.push('/');
+  React.useEffect(() => {
+    if (currentUser) router.push('/');
+  }, [router, currentUser]);
+
   return (
     <>
       <Login />

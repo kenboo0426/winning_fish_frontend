@@ -9,7 +9,6 @@ import {
 import React from 'react';
 import { NotificationStateContext } from '../../components/Notification';
 import { show, create } from '../api/user';
-import { useShowError } from '../hooks/error';
 import { User } from '../interface';
 import { auth } from './firebase';
 
@@ -30,11 +29,11 @@ export const UserAuthProvider: React.FC<Props> = (props) => {
     User | undefined | null
   >();
   const [loading, setLoading] = React.useState<boolean>(false);
-  const showError = useShowError();
   const { setNotify } = React.useContext(NotificationStateContext);
 
   React.useEffect(() => {
     return auth.onAuthStateChanged(async (user) => {
+      setLoading(true);
       if (!user && currentUser) {
         setCurrentUser(null);
       } else if (user && !currentUser) {
@@ -51,22 +50,10 @@ export const UserAuthProvider: React.FC<Props> = (props) => {
           open: true,
         });
       }
+      setLoading(false);
     });
   }, [currentUser, setNotify]);
 
-  const hadnleGetCurrentUser = React.useCallback(async () => {
-    try {
-      setLoading(true);
-      // const response = await getCurrentUser();
-      // setCurrectUser(response);
-    } catch (err) {
-      showError(err);
-    }
-  }, [showError]);
-
-  React.useEffect(() => {
-    hadnleGetCurrentUser();
-  }, [hadnleGetCurrentUser]);
   return (
     <>
       <AuthContext.Provider
@@ -107,4 +94,8 @@ export const loginByGoogleAuth = async (): Promise<UserCredential | null> => {
 
 export const signOutFromGoogleAuth = async () => {
   signOut(auth);
+};
+
+export const useCurrentUserLoading = () => {
+  return React.useContext(AuthContext).loading;
 };
