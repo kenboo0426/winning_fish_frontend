@@ -1,70 +1,55 @@
-import type { NextPage } from 'next';
-import { ProgressBar } from 'react-bootstrap';
-import React from 'react';
-import Image from 'react-bootstrap/Image';
-import { useShowError } from '../src/hooks/error';
-import { show } from '../src/api/quiz';
-import { Quiz } from '../src/interface';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
+import { Button } from 'react-bootstrap';
+import { useCurrentUser } from '../src/utils/userAuth';
+import { WebSocketContext } from '../src/utils/webSocket';
 
-const Home: NextPage = () => {
-  const LiMIT_TIME = 20.0;
-  const [nowProgressRate, setNowProgressRate] = React.useState(100);
-  const [remainingTime, setRemainingTime] = React.useState(LiMIT_TIME);
-  const [currentImageProgress, setCurrentImageProgress] = React.useState(0);
-  const showError = useShowError();
-  let setIntervalObj: NodeJS.Timer;
+const Home: React.FC = () => {
+  const currentUser = useCurrentUser();
+  const router = useRouter();
+  const { socketrefCurrent, onlinMatchStatus, isConnected } =
+    React.useContext(WebSocketContext);
 
-  const showPassedTime = (startTime: Date) => {
-    const nowTime: Date = new Date();
-    const passedTime = (Number(nowTime) - Number(startTime)) / 1000;
-    setNowProgressRate(((20 - passedTime) / 20) * 100);
-    const newRemainingTime =
-      Math.round((LiMIT_TIME - passedTime) * 1000) / 1000;
-    setRemainingTime(newRemainingTime);
-    setCurrentImageProgress(Math.min(Math.floor(passedTime / 2), 9));
-    if (passedTime > 20) {
-      setRemainingTime(0.0);
-      handleTimeUp();
-    }
-  };
+  const handleStartMatching = React.useCallback(() => {
+    if (!currentUser) return;
 
-  const handleTimeUp = () => {
-    clearInterval(setIntervalObj);
-  };
+    const jsonDate = {
+      action: 'join_online_match',
+      user_id: String(currentUser.id),
+    };
+    socketrefCurrent.send(JSON.stringify(jsonDate));
+  }, [currentUser, socketrefCurrent]);
 
-  const handleStart = () => {
-    const startTime = new Date();
-    setIntervalObj = setInterval(() => showPassedTime(startTime), 10);
-  };
+  const fetchJoinedUserIDs = React.useCallback(() => {
+    if (!socketrefCurrent) return;
+    const jsonDate = {
+      action: 'fetch_joined_user',
+    };
+    socketrefCurrent.send(JSON.stringify(jsonDate));
+  }, [socketrefCurrent]);
 
-  const [quiz, setQuiz] = React.useState<Quiz>();
+  // React.useEffect(() => {
+  //   console.log("vvvvvvvvv")
+  //   if (!onlinMatchStatus || !currentUser) return;
+  //   if (
+  //     onlinMatchStatus.joined_onine_match_user_ids != null &&
+  //     onlinMatchStatus.joined_onine_match_user_ids.includes(
+  //       String(currentUser.id)
+  //     )
+  //   ) {
+  //     console.log("aaaaaaaaa")
+  //     router.push('/waiting_matching');
+  //   }
+  // }, [onlinMatchStatus, currentUser, router]);
 
-  const fetchQuiz = React.useCallback(async () => {
-    try {
-      const response = await show(12);
-      setQuiz(response);
-    } catch (error) {
-      showError(error);
-    }
-  }, [showError]);
-
-  React.useEffect(() => {
-    fetchQuiz();
-  }, [fetchQuiz]);
-
-  if (!quiz) return <></>;
+  if (!currentUser || !socketrefCurrent) return <></>;
   return (
     <div>
-      <button onClick={handleStart}>nutton</button>
-      <br></br>
-      残り時間：{remainingTime}
-      <ProgressBar now={nowProgressRate} visuallyHidden />
-      <br></br> <br></br>
-      <Image
-        style={{ width: 300, height: 230 }}
-        alt=""
-        src={quiz.quiz_images[currentImageProgress].name}
-      ></Image>
+      {onlinMatchStatus?.joined_onine_match_user_ids?.map((id, index) => (
+        <React.Fragment key={index}>id: {id}</React.Fragment>
+      ))}
+      <h1>WebSocket is connected : {`${isConnected}`}</h1>
+      <Button onClick={handleStartMatching}>オンライン対戦をする</Button>
     </div>
   );
 };
