@@ -41,11 +41,11 @@ const QuizList: React.FC<Props> = ({ quizzes, setQuizzes }) => {
             <Card className="my-3">
               <Card.Header>No.{quiz.id}</Card.Header>
               <Card.Body>
-                <Card.Img
+                {/* <Card.Img
                   variant="top"
                   src={`${quiz.image}`}
                   style={{ width: 300, height: 230 }}
-                />
+                /> */}
                 <div className="d-flex flex-row justify-content-between">
                   <div>
                     <Card.Text>正解</Card.Text>

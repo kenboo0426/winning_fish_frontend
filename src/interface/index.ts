@@ -36,3 +36,23 @@ export type QuizImage = {
   quiz_id: number;
   progress_id: number;
 };
+
+export type OnlineMatch = {
+  id: number;
+  person_number: number;
+  participants_number: number;
+  started_at: Date;
+  finished_at: Date;
+  created_at: Date;
+  online_match_joined_users: OnlineMatchJoinedUser[];
+};
+
+export type OnlineMatchJoinedUser = {
+  id: number;
+  user_id: number;
+  online_match_id: number;
+  rank: number;
+  remain_time: number;
+  miss_answerd_count: number;
+  score: number;
+};
