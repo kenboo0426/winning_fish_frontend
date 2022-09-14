@@ -41,7 +41,7 @@ const WaitingMatchingPage: React.FC = () => {
     try {
       const response = await start(online_match_id as string);
       setOnlineMatch(response);
-      router.push(`/online_match/${online_match_id}/quiz`);
+      router.push(`/online_match/${online_match_id}/quiz?question=1`);
     } catch (err) {
       showError(err);
     }
