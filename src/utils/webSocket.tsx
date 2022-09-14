@@ -7,10 +7,15 @@ export const WebSocketContext = React.createContext<WebSocketStatus>(
   {} as WebSocketStatus
 );
 
+type WsUser = {
+  id: number;
+  name: string;
+};
+
 type WsJsonResponse = {
   action: string;
-  message: string;
   joined_onine_match_user_ids: string[];
+  users: WsUser[];
 };
 
 type Props = {
@@ -36,7 +41,7 @@ export const WebSocketProvider: React.FC<Props> = ({ children }) => {
     socketRef.current = new ReconnectingWebSocket(
       'ws://localhost:3000/socket',
       [],
-      { debug: true, minReconnectionDelay: 3000 }
+      { minReconnectionDelay: 3000 }
     );
     socketRef.current.onopen = function () {
       setIsConnected(true);
