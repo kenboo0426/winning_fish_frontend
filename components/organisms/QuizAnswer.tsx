@@ -1,7 +1,6 @@
 import { ProgressBar } from 'react-bootstrap';
 import { Box, Typography } from '@mui/material';
 import React from 'react';
-import Image from 'react-bootstrap/Image';
 import { OnlineMatch, Quiz } from '../../src/interface';
 import SimpleDialog from './SimpleDialog';
 import { useShowError } from '../../src/hooks/error';
@@ -9,12 +8,14 @@ import { create } from '../../src/api/answer';
 import { useCurrentUser } from '../../src/utils/userAuth';
 import { useRouter } from 'next/router';
 import OptionButton from '../molecules/OptionButton';
+import Image from 'react-bootstrap/Image';
 
 type Props = {
   quiz: Quiz;
   online_match_id: number;
   question: number;
   online_match: OnlineMatch;
+  isReadyToStart: boolean;
 };
 
 const QuizAnswer: React.FC<Props> = ({
@@ -22,6 +23,7 @@ const QuizAnswer: React.FC<Props> = ({
   online_match_id,
   question,
   online_match,
+  isReadyToStart,
 }) => {
   const LiMIT_TIME = 20.0;
   const [nowProgressRate, setNowProgressRate] = React.useState(100);
@@ -152,16 +154,18 @@ const QuizAnswer: React.FC<Props> = ({
   );
 
   React.useEffect(() => {
+    if (!isReadyToStart) return;
+
     const startTime = new Date();
     setIntervalObj = setInterval(() => showPassedTime(startTime), 10);
 
     return () => {
       clearInterval(setIntervalObj);
     };
-  }, []);
+  }, [isReadyToStart]);
 
   return (
-    <div>
+    <div style={{ display: isReadyToStart ? 'block' : 'none' }}>
       {showCorrectDialog && (
         <SimpleDialog node="正解" isOpen={true} color="#cb1f1f" />
       )}

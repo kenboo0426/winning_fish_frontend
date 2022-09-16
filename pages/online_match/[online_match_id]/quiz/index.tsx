@@ -58,7 +58,7 @@ const OnlineMatchQuizPage: React.FC = () => {
 
   setTimeout(() => {
     setIsReadyToStart(true);
-  }, 3 * 1200);
+  }, 3 * 1300);
 
   return (
     <>
@@ -76,12 +76,13 @@ const OnlineMatchQuizPage: React.FC = () => {
           </Typography>
         </Box>
       </Slide>
-      {isReadyToStart && quiz && onlineMatch && (
+      {quiz && onlineMatch && (
         <QuizAnswer
           quiz={quiz}
           online_match_id={Number(online_match_id)}
           question={Number(question)}
           online_match={onlineMatch}
+          isReadyToStart={isReadyToStart}
         />
       )}
     </>

@@ -51,7 +51,7 @@ const MyappInit: React.FC = () => {
   const { socketrefCurrent, onlinMatchStatus, isConnected } =
     React.useContext(WebSocketContext);
 
-  console.log(onlinMatchStatus?.users, 'onlinMatchStatusonlinMatchStatus');
+  // console.log(onlinMatchStatus?.users, 'onlinMatchStatusonlinMatchStatus');
 
   // React.useEffect(() => {
   //   if (!currentUserLoading && !currentUser) {
