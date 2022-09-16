@@ -53,7 +53,7 @@ export type OnlineMatchJoinedUser = {
   user_id: number;
   online_match_id: number;
   rank: number;
-  remain_time: number;
+  remained_time: number;
   miss_answerd_count: number;
   score: number;
 };

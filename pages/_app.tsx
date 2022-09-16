@@ -10,9 +10,9 @@ import {
   UserAuthProvider,
 } from '../src/utils/userAuth';
 import React from 'react';
-import { WebSocketProvider } from '../src/utils/webSocket';
 import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
+import { WebSocketProvider, WebSocketContext } from '../src/utils/webSocket';
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
@@ -45,6 +45,10 @@ const MyappInit: React.FC = () => {
   const currentUser = useCurrentUser();
   const router = useRouter();
   const currentUserLoading = useCurrentUserLoading();
+  const { socketrefCurrent, onlinMatchStatus, isConnected } =
+    React.useContext(WebSocketContext);
+
+  console.log(onlinMatchStatus, 'onlinMatchStatusonlinMatchStatus');
 
   // React.useEffect(() => {
   //   if (!currentUserLoading && !currentUser) {
