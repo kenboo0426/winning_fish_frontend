@@ -2,11 +2,11 @@ import { ProgressBar } from 'react-bootstrap';
 import { Box, Button } from '@mui/material';
 import React, { PureComponent } from 'react';
 import Image from 'react-bootstrap/Image';
-import { OnlineMatch, Quiz } from '../src/interface';
-import SimpleDialog from './organisms/SimpleDialog';
-import { useShowError } from '../src/hooks/error';
-import { create } from '../src/api/answer';
-import { useCurrentUser } from '../src/utils/userAuth';
+import { OnlineMatch, Quiz } from '../../src/interface';
+import SimpleDialog from './SimpleDialog';
+import { useShowError } from '../../src/hooks/error';
+import { create } from '../../src/api/answer';
+import { useCurrentUser } from '../../src/utils/userAuth';
 import { useRouter } from 'next/router';
 
 type Props = {

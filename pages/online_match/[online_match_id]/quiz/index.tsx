@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import SimpleDialog from '../../../../components/organisms/SimpleDialog';
-import QuizAnswer from '../../../../components/QuizAnswer';
+import QuizAnswer from '../../../../components/organisms/QuizAnswer';
 import { show } from '../../../../src/api/online_match';
 import { show as Quizshow } from '../../../../src/api/quiz';
 import { useShowError } from '../../../../src/hooks/error';

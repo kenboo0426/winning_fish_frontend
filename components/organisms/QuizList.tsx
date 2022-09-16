@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import { Card, Button } from 'react-bootstrap';
-import { destory } from '../src/api/quiz';
-import { useShowError } from '../src/hooks/error';
-import { Quiz } from '../src/interface';
+import { destory } from '../../src/api/quiz';
+import { useShowError } from '../../src/hooks/error';
+import { Quiz } from '../../src/interface';
 import { NotificationStateContext } from './Notification';
 
 type Props = {

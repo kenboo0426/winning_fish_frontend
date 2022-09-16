@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-import QuizUpdateForm from '../../../../components/QuizUpdateForm';
+import QuizUpdateForm from '../../../../components/organisms/QuizUpdateForm';
 import { show } from '../../../../src/api/quiz';
 import { useShowError } from '../../../../src/hooks/error';
 import { Quiz } from '../../../../src/interface';

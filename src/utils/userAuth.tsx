@@ -7,7 +7,7 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import React from 'react';
-import { NotificationStateContext } from '../../components/Notification';
+import { NotificationStateContext } from '../../components/organisms/Notification';
 import { show, create } from '../api/user';
 import { User } from '../interface';
 import { auth } from './firebase';

@@ -4,7 +4,7 @@ import { index } from '../../../src/api/quiz';
 import { useShowError } from '../../../src/hooks/error';
 import { Quiz } from '../../../src/interface';
 import { useRouter } from 'next/router';
-import QuizList from '../../../components/QuizList';
+import QuizList from '../../../components/organisms/QuizList';
 
 const QuizzesPage: React.FC = () => {
   const [quizzes, setQuizzes] = React.useState<Quiz[]>([]);

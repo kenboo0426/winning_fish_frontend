@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-import SignUp from '../components/SignUp';
+import SignUp from '../components/organisms/SignUp';
 import { useCurrentUser } from '../src/utils/userAuth';
 
 const SignUpPage: React.FC = () => {

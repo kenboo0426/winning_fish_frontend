@@ -1,5 +1,5 @@
 import React from 'react';
-import QuizCreateForm from '../../../components/QuizCreateForm';
+import QuizCreateForm from '../../../components/organisms/QuizCreateForm';
 
 const QuizNewPage: React.FC = () => {
   return (
