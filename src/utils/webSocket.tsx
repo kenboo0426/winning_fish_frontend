@@ -1,21 +1,24 @@
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import ReconnectingWebSocket from 'reconnecting-websocket';
+import { OnlineMatch } from '../interface';
 import { useCurrentUser } from './userAuth';
 
 export const WebSocketContext = React.createContext<WebSocketStatus>(
   {} as WebSocketStatus
 );
 
-type WsUser = {
+export type WsUser = {
   id: number;
   name: string;
+  remained_time: number;
 };
 
 type WsJsonResponse = {
   action: string;
   joined_onine_match_user_ids: string[];
   users: WsUser[];
+  online_match: OnlineMatch;
 };
 
 type Props = {
@@ -39,7 +42,8 @@ export const WebSocketProvider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     socketRef.current = new ReconnectingWebSocket(
-      'ws://localhost:3000/socket',
+      `${process.env.NEXT_PUBLIC_BACKEND_WS_URL}/socket` ||
+        'ws://localhost:3000/socket',
       [],
       { minReconnectionDelay: 3000 }
     );

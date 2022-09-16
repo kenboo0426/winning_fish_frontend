@@ -56,6 +56,7 @@ export type OnlineMatchJoinedUser = {
   remained_time: number;
   miss_answerd_count: number;
   score: number;
+  user: User;
 };
 
 export type OnlineMatchAskedQuiz = {
