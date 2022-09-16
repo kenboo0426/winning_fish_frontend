@@ -52,7 +52,6 @@ const Home: React.FC = () => {
   //   }
   // }, [onlinMatchStatus, currentUser, router]);
 
-  console.log(onlinMatchStatus, 'onlinMatchStatus');
   if (!currentUser || !socketrefCurrent) return <></>;
   return (
     <div>

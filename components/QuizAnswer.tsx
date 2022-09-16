@@ -1,21 +1,38 @@
 import { ProgressBar } from 'react-bootstrap';
 import { Box, Button } from '@mui/material';
-import React from 'react';
+import React, { PureComponent } from 'react';
 import Image from 'react-bootstrap/Image';
-import { Quiz } from '../src/interface';
+import { OnlineMatch, Quiz } from '../src/interface';
 import SimpleDialog from './organisms/SimpleDialog';
+import { useShowError } from '../src/hooks/error';
+import { create } from '../src/api/answer';
+import { useCurrentUser } from '../src/utils/userAuth';
+import { useRouter } from 'next/router';
 
 type Props = {
   quiz: Quiz;
+  online_match_id: number;
+  question: number;
+  online_match: OnlineMatch;
 };
 
-const QuizAnswer: React.FC<Props> = ({ quiz }) => {
+const QuizAnswer: React.FC<Props> = ({
+  quiz,
+  online_match_id,
+  question,
+  online_match,
+}) => {
   const LiMIT_TIME = 20.0;
   const [nowProgressRate, setNowProgressRate] = React.useState(100);
   const [remainingTime, setRemainingTime] = React.useState(LiMIT_TIME);
   const [currentImageProgress, setCurrentImageProgress] = React.useState(0);
   const [showCorrectDialog, setShowCorrectDialog] = React.useState(false);
   const [showInCorrectDialog, setShowInCorrectDialog] = React.useState(false);
+  const [remainTimeInCorrect, seteRmainTimeInCorrect] = React.useState(3);
+
+  const currentUser = useCurrentUser();
+  const router = useRouter();
+  const showError = useShowError();
   let setIntervalObj: NodeJS.Timer;
 
   const showPassedTime = (startTime: Date) => {
@@ -31,26 +48,104 @@ const QuizAnswer: React.FC<Props> = ({ quiz }) => {
       handleTimeUp();
     }
   };
-  console.log(quiz, 'quiz');
+
+  const moveToNextQuestion = () => {
+    window.location.href = `/online_match/${online_match_id}/quiz?question=${
+      question + 1
+    }`;
+  };
 
   const handleTimeUp = () => {
     clearInterval(setIntervalObj);
+    if (online_match.online_match_asked_quizzes.length <= Number(question)) {
+      router.push(`/online_match/${online_match_id}/finished`);
+    } else {
+      moveToNextQuestion();
+    }
   };
 
-  const handleCorrectAsnwer = React.useCallback(() => {
-    setShowCorrectDialog(true);
-  }, []);
+  const handleAfterCorrectAnswer = React.useCallback(() => {
+    setTimeout(() => {
+      if (online_match.online_match_asked_quizzes.length <= Number(question)) {
+        router.push(`/online_match/${online_match_id}/finished`);
+      } else {
+        moveToNextQuestion();
+      }
+      setShowCorrectDialog(false);
+    }, 1000);
+  }, [online_match_id, online_match, question, router]);
 
-  const handleInCorrectAsnwer = React.useCallback(() => {
-    setShowInCorrectDialog(true);
-  }, []);
+  const handleAfterInCorrectAnswer = React.useCallback(() => {
+    seteRmainTimeInCorrect(3);
+    const timer = setInterval(() => {
+      seteRmainTimeInCorrect((preCount) => preCount - 1);
+    }, 1000);
+    setTimeout(() => {
+      setShowInCorrectDialog(false);
+      clearInterval(timer);
+    }, 3000);
+  }, [seteRmainTimeInCorrect]);
+
+  const handleCorrectAsnwer = React.useCallback(
+    async (option_id: number) => {
+      if (!currentUser) return;
+
+      try {
+        const params = {
+          user_id: currentUser.id,
+          quiz_id: quiz.id,
+          correct: true,
+          answered_option_id: option_id,
+          remained_time: remainingTime,
+          online_match_id: online_match_id,
+        };
+
+        await create(params);
+        setShowCorrectDialog(true);
+        handleAfterCorrectAnswer();
+      } catch (err) {
+        showError(err);
+      }
+    },
+    [
+      currentUser,
+      quiz,
+      remainingTime,
+      online_match_id,
+      showError,
+      handleAfterCorrectAnswer,
+    ]
+  );
+
+  const handleInCorrectAsnwer = React.useCallback(
+    async (option_id: number) => {
+      if (!currentUser) return;
+
+      try {
+        const params = {
+          user_id: currentUser.id,
+          quiz_id: quiz.id,
+          correct: false,
+          answered_option_id: option_id,
+          online_match_id: online_match_id,
+        };
+
+        await create(params);
+        setShowInCorrectDialog(true);
+        handleAfterInCorrectAnswer();
+      } catch (err) {
+        showError(err);
+      }
+    },
+    [currentUser, quiz, online_match_id, showError, handleAfterInCorrectAnswer]
+  );
 
   const checkAnswer = React.useCallback(
     (option_id: number) => {
       if (quiz.correct_id == option_id) {
-        handleCorrectAsnwer();
+        handleCorrectAsnwer(option_id);
       } else {
-        handleInCorrectAsnwer();
+        handleInCorrectAsnwer(option_id);
       }
     },
     [quiz, handleCorrectAsnwer, handleInCorrectAsnwer]
@@ -69,7 +164,10 @@ const QuizAnswer: React.FC<Props> = ({ quiz }) => {
     <div>
       {showCorrectDialog && <SimpleDialog text="正解です！" isOpen={true} />}
       {showInCorrectDialog && (
-        <SimpleDialog text="不正解です！" isOpen={true} />
+        <SimpleDialog
+          text={`残り: ${remainTimeInCorrect}  不正解です！`}
+          isOpen={true}
+        />
       )}
       <br></br>
       残り時間：{remainingTime}

@@ -21,3 +21,12 @@ export const start = async (id: string) => {
   const data = response.data as OnlineMatch;
   return data;
 };
+
+export const calculateTime = async (id: string, user_id: number) => {
+  const response = await apiClient.post(
+    `/online_match/calculate/${id}?user_id=${user_id}`
+  );
+
+  const data = response.data as OnlineMatch;
+  return data;
+};

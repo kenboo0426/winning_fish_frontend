@@ -60,7 +60,14 @@ const OnlineMatchQuizPage: React.FC = () => {
   return (
     <>
       <SimpleDialog text={`第${question}問目！`} isOpen={open} />
-      {isReadyToStart && quiz && <QuizAnswer quiz={quiz} />}
+      {isReadyToStart && quiz && onlineMatch && (
+        <QuizAnswer
+          quiz={quiz}
+          online_match_id={Number(online_match_id)}
+          question={Number(question)}
+          online_match={onlineMatch}
+        />
+      )}
     </>
   );
 };

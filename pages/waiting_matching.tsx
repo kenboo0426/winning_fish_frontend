@@ -51,7 +51,6 @@ const WaitingMatchingPage: React.FC = () => {
     fetchJoinedUserIDs();
   }, [fetchJoinedUserIDs]);
 
-  console.log(onlinMatchStatus, 'onlinMatchStatus');
   React.useEffect(() => {
     fetchOnlineMatch();
   }, [fetchOnlineMatch]);
