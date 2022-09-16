@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-import SimpleDialog from '../../../../components/organisms/SimpleDialog';
 import QuizAnswer from '../../../../components/organisms/QuizAnswer';
 import { show } from '../../../../src/api/online_match';
 import { show as Quizshow } from '../../../../src/api/quiz';
 import { useShowError } from '../../../../src/hooks/error';
 import { OnlineMatch, Quiz } from '../../../../src/interface';
+import { Box, Slide, Typography } from '@mui/material';
 
 const OnlineMatchQuizPage: React.FC = () => {
   const router = useRouter();
@@ -54,12 +54,28 @@ const OnlineMatchQuizPage: React.FC = () => {
 
   setTimeout(() => {
     handleClose();
-    setIsReadyToStart(true);
   }, 3 * 1000);
+
+  setTimeout(() => {
+    setIsReadyToStart(true);
+  }, 3 * 1200);
 
   return (
     <>
-      <SimpleDialog text={`第${question}問目！`} isOpen={open} />
+      <Slide direction="up" in={open} mountOnEnter unmountOnExit>
+        <Box sx={{ mt: 30, textAlign: 'center' }}>
+          <Typography
+            sx={{
+              color: 'white',
+              WebkitTextStroke: '4px red',
+              fontSize: 60,
+              fontWeight: 900,
+            }}
+          >
+            第{question}問
+          </Typography>
+        </Box>
+      </Slide>
       {isReadyToStart && quiz && onlineMatch && (
         <QuizAnswer
           quiz={quiz}

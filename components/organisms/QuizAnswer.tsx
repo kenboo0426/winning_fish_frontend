@@ -1,6 +1,6 @@
 import { ProgressBar } from 'react-bootstrap';
-import { Box, Button } from '@mui/material';
-import React, { PureComponent } from 'react';
+import { Box, Typography } from '@mui/material';
+import React from 'react';
 import Image from 'react-bootstrap/Image';
 import { OnlineMatch, Quiz } from '../../src/interface';
 import SimpleDialog from './SimpleDialog';
@@ -8,6 +8,7 @@ import { useShowError } from '../../src/hooks/error';
 import { create } from '../../src/api/answer';
 import { useCurrentUser } from '../../src/utils/userAuth';
 import { useRouter } from 'next/router';
+import OptionButton from '../molecules/OptionButton';
 
 type Props = {
   quiz: Quiz;
@@ -39,8 +40,7 @@ const QuizAnswer: React.FC<Props> = ({
     const nowTime: Date = new Date();
     const passedTime = (Number(nowTime) - Number(startTime)) / 1000;
     setNowProgressRate(((20 - passedTime) / 20) * 100);
-    const newRemainingTime =
-      Math.round((LiMIT_TIME - passedTime) * 1000) / 1000;
+    const newRemainingTime = Math.round((LiMIT_TIME - passedTime) * 100) / 100;
     setRemainingTime(newRemainingTime);
     setCurrentImageProgress(Math.min(Math.floor(passedTime / 2), 9));
     if (passedTime > 20) {
@@ -49,11 +49,11 @@ const QuizAnswer: React.FC<Props> = ({
     }
   };
 
-  const moveToNextQuestion = () => {
+  const moveToNextQuestion = React.useCallback(() => {
     window.location.href = `/online_match/${online_match_id}/quiz?question=${
       question + 1
     }`;
-  };
+  }, [online_match_id, question]);
 
   const handleTimeUp = () => {
     clearInterval(setIntervalObj);
@@ -73,7 +73,7 @@ const QuizAnswer: React.FC<Props> = ({
       }
       setShowCorrectDialog(false);
     }, 1000);
-  }, [online_match_id, online_match, question, router]);
+  }, [online_match_id, online_match, moveToNextQuestion, question, router]);
 
   const handleAfterInCorrectAnswer = React.useCallback(() => {
     seteRmainTimeInCorrect(3);
@@ -162,35 +162,68 @@ const QuizAnswer: React.FC<Props> = ({
 
   return (
     <div>
-      {showCorrectDialog && <SimpleDialog text="正解です！" isOpen={true} />}
+      {showCorrectDialog && (
+        <SimpleDialog node="正解" isOpen={true} color="#cb1f1f" />
+      )}
       {showInCorrectDialog && (
         <SimpleDialog
-          text={`残り: ${remainTimeInCorrect}  不正解です！`}
+          node={
+            <>
+              不正解
+              <p style={{ fontSize: 15, marginLeft: 10, color: '#55545a' }}>
+                ※{remainTimeInCorrect}秒後に再開できます
+              </p>
+            </>
+          }
           isOpen={true}
+          color="#2346c7"
         />
       )}
-      <br></br>
-      残り時間：{remainingTime}
-      <ProgressBar now={nowProgressRate} visuallyHidden />
-      <br></br> <br></br>
-      <Image
-        style={{ width: 300, height: 230 }}
-        alt=""
-        src={quiz.quiz_images[currentImageProgress].name}
+      <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: 3 }}>
+        <Box
+          sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}
+        >
+          <Typography sx={{ color: 'black', fontSize: 20, fontWeight: 900 }}>
+            残り問題数
+          </Typography>
+          <Typography sx={{ color: '#890f0f', fontSize: 25, fontWeight: 900 }}>
+            {online_match.online_match_asked_quizzes.length - question + 1}
+          </Typography>
+        </Box>
+        <Box
+          sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}
+        >
+          <Typography sx={{ color: 'black', fontSize: 20, fontWeight: 900 }}>
+            残り時間
+          </Typography>
+          <Typography sx={{ color: '#890f0f', fontSize: 25, fontWeight: 900 }}>
+            {remainingTime}
+          </Typography>
+        </Box>
+      </Box>
+      <ProgressBar
+        now={nowProgressRate}
+        visuallyHidden
+        style={{ width: '90%', margin: '10px auto' }}
       />
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ width: '90%', mx: 'auto' }}>
+        <Image
+          style={{
+            width: '100%',
+            height: 230,
+          }}
+          alt=""
+          src={quiz.quiz_images[currentImageProgress].name}
+        />
+      </Box>
+      <Box sx={{ mt: 3, width: '90%', mx: 'auto' }}>
         {quiz.options.map((option, index) => (
-          <Box sx={{ width: '80%', textAlign: 'left' }} key={option.id}>
-            <React.Fragment>
-              <Button
-                onClick={() => checkAnswer(option.id)}
-                variant="outlined"
-                sx={{ width: 300, my: 1, px: 0, textAlign: 'left' }}
-              >
-                {index + 1}、 {option.name}
-              </Button>
-            </React.Fragment>
-          </Box>
+          <OptionButton
+            key={index}
+            option_number={index}
+            option={option}
+            onClick={checkAnswer}
+          />
         ))}
       </Box>
     </div>

@@ -13,18 +13,29 @@ const Transition = React.forwardRef(function Transition(
 
 type Props = {
   type?: 'transition' | 'normal';
-  text: string;
+  node: string | React.ReactNode;
   isOpen: boolean;
+  color: string;
 };
 
 const SimpleDialog: React.FC<Props> = ({
   type = 'transition',
-  text,
+  node,
   isOpen,
+  color,
 }) => {
   return (
     <Dialog open={isOpen} TransitionComponent={Transition} keepMounted>
-      <DialogTitle>{text}</DialogTitle>
+      <DialogTitle
+        sx={{
+          color: color,
+          fontSize: 60,
+          fontWeight: 900,
+          mx: 5,
+        }}
+      >
+        {node}
+      </DialogTitle>
     </Dialog>
   );
 };
