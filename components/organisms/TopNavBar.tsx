@@ -83,7 +83,13 @@ const TopNavbar: React.FC = () => {
             mx: 2,
           }}
         >
-          <Typography variant="h6" noWrap sx={{ ml: 2 }} component="div">
+          <Typography
+            variant="h6"
+            noWrap
+            style={{ fontFamily: 'Nico Moji' }}
+            sx={{ ml: 2 }}
+            component="div"
+          >
             Winning Fish
           </Typography>
           <IconButton color="inherit" edge="start" onClick={handleDrawerToggle}>
