@@ -45,6 +45,7 @@ export type OnlineMatch = {
   finished_at: Date;
   created_at: Date;
   online_match_joined_users: OnlineMatchJoinedUser[];
+  online_match_asked_quizzes: OnlineMatchAskedQuiz[];
 };
 
 export type OnlineMatchJoinedUser = {
@@ -52,7 +53,13 @@ export type OnlineMatchJoinedUser = {
   user_id: number;
   online_match_id: number;
   rank: number;
-  remain_time: number;
+  remained_time: number;
   miss_answerd_count: number;
   score: number;
+};
+
+export type OnlineMatchAskedQuiz = {
+  id: number;
+  quiz_id: number;
+  online_match_id: number;
 };
