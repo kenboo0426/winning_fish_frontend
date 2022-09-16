@@ -116,7 +116,6 @@ const Home: React.FC = () => {
             my: 1,
             height: 80,
             fontSize: 20,
-            borderRadius: 0,
             border: '2mm ridge #14150399',
           }}
           // onClick={() => router.push('/setting')}

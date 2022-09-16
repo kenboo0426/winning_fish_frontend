@@ -1,4 +1,11 @@
-import { Box, Button } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Typography,
+} from '@mui/material';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { show, start } from '../src/api/online_match';
@@ -6,6 +13,7 @@ import { useShowError } from '../src/hooks/error';
 import { OnlineMatch } from '../src/interface';
 import { useCurrentUser } from '../src/utils/userAuth';
 import { WebSocketContext } from '../src/utils/webSocket';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const WaitingMatchingPage: React.FC = () => {
   const { socketrefCurrent, onlinMatchStatus } =
@@ -47,6 +55,8 @@ const WaitingMatchingPage: React.FC = () => {
     }
   }, [showError, router, online_match_id]);
 
+  const handleCancelOnlineMatch = React.useCallback(() => {}, []);
+
   React.useEffect(() => {
     fetchJoinedUserIDs();
   }, [fetchJoinedUserIDs]);
@@ -57,26 +67,116 @@ const WaitingMatchingPage: React.FC = () => {
 
   return (
     <>
-      <Box sx={{ width: '80%', mt: 5 }}>
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          bgcolor: 'white',
+          width: '50%',
+          ml: 2,
+          mt: 2,
+          px: 2,
+          py: 1,
+        }}
+      >
+        <IconButton component="label" onClick={handleCancelOnlineMatch}>
+          <ArrowBackIcon />
+        </IconButton>
+        <Typography sx={{ ml: 2 }}>参加者受付中</Typography>
+      </Box>
+      <Box sx={{ width: '90%', mt: 5, mx: 'auto' }}>
         {[...Array(4)].map((_, index) => {
           let user;
           if (onlinMatchStatus?.users) {
             user = onlinMatchStatus?.users[index];
           }
           return (
-            <Box key={index} sx={{ width: '80%', border: '1px solid grey' }}>
-              <React.Fragment>
-                {index + 1}. id: {user?.id}
-                name: {user?.name}
-              </React.Fragment>
+            <Box
+              key={index}
+              sx={{
+                display: 'flex',
+                my: 2,
+                height: 80,
+              }}
+            >
+              <Avatar
+                variant="square"
+                src={user?.name}
+                sx={{ width: 80, height: 80 }}
+              />
+              <Box
+                key={index}
+                sx={{
+                  bgcolor: '#dbd9d9',
+                  ml: 1,
+                  width: '100%',
+                  height: '100%',
+                  border: '1mm ridge #29020299',
+                }}
+              >
+                {user ? (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      height: '100%',
+                      ml: 2,
+                    }}
+                  >
+                    <Typography sx={{ fontSize: 20 }}>
+                      {index + 1}P: {user?.name}
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      height: '100%',
+                      ml: 2,
+                    }}
+                  >
+                    <CircularProgress color="inherit" />
+                    <Typography sx={{ ml: 2, fontSize: 20 }}>
+                      参加者受付中
+                    </Typography>
+                  </Box>
+                )}
+              </Box>
             </Box>
           );
         })}
       </Box>
-      <Button variant="contained" sx={{ mt: 5 }} onClick={startOnlineMatch}>
-        対戦相手を待たずに開始する
-        <br></br>※誰か一人でも押した場合に対戦は開始されます
-      </Button>
+      <Box sx={{ width: '90%', mx: 'auto' }}>
+        <Box sx={{ display: 'flex', mt: 5, justifyContent: 'space-around' }}>
+          <Button
+            variant="contained"
+            onClick={handleCancelOnlineMatch}
+            color="error"
+            sx={{ border: '1mm ridge #14150399' }}
+          >
+            キャンセル
+          </Button>
+          <Button
+            color="success"
+            variant="contained"
+            onClick={startOnlineMatch}
+            sx={{ border: '1mm ridge #14150399' }}
+          >
+            参加者を待たずにスタート
+          </Button>
+        </Box>
+        <Typography
+          sx={{
+            mt: 2,
+            fontSize: 15,
+            fontWeight: 'bold',
+          }}
+          color="error"
+        >
+          ※誰か一人でもスタートした場合は自動的に開始されます
+        </Typography>
+      </Box>
     </>
   );
 };
