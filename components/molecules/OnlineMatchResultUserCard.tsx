@@ -54,18 +54,7 @@ const OnlineMatchResultUserCard: React.FC<Props> = ({
         >
           {existUser ? userName : 'ユーザーなし'}
         </Typography>
-        {existUser && remainedTime ? (
-          <Typography
-            sx={{
-              color: 'black',
-              width: '100%',
-              fontSize: 20,
-              fontWeight: 900,
-            }}
-          >
-            スコア：{remainedTime}点
-          </Typography>
-        ) : (
+        {existUser && !remainedTime && (
           <Box
             sx={{
               display: 'flex',
@@ -86,6 +75,18 @@ const OnlineMatchResultUserCard: React.FC<Props> = ({
             </Typography>
             <CircularProgress color="inherit" />
           </Box>
+        )}
+        {existUser && remainedTime && (
+          <Typography
+            sx={{
+              color: 'black',
+              width: '100%',
+              fontSize: 20,
+              fontWeight: 900,
+            }}
+          >
+            スコア：{remainedTime}点
+          </Typography>
         )}
       </Box>
     </Button>
