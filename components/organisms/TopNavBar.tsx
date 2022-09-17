@@ -11,6 +11,7 @@ import {
   Typography,
   IconButton,
   Drawer,
+  Avatar,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -72,26 +73,37 @@ const TopNavbar: React.FC = () => {
   );
 
   return (
-    <Box>
+    <Box sx={{ height: 56 }}>
       <CssBaseline />
-      <AppBar position="static" sx={{}}>
+      <AppBar
+        position="absolute"
+        sx={{
+          mt: 0.5,
+          width: '98%',
+          mx: 'auto',
+          left: 0,
+          right: 0,
+          bgcolor: '#060606e9',
+        }}
+      >
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
-            my: 2,
-            mx: 2,
+            my: 1,
+            mx: 1,
           }}
         >
-          <Typography
-            variant="h6"
-            noWrap
-            style={{ fontFamily: 'Nico Moji' }}
-            sx={{ ml: 2 }}
-            component="div"
-          >
-            Winning Fish
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Avatar src={currentUser?.icon} sx={{ width: 40, height: 40 }} />
+            <Typography
+              variant="h6"
+              sx={{ ml: 2, color: 'white' }}
+              component="div"
+            >
+              {currentUser?.name}
+            </Typography>
+          </Box>
           <IconButton color="inherit" edge="start" onClick={handleDrawerToggle}>
             <MenuIcon />
           </IconButton>

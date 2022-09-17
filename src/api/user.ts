@@ -5,6 +5,7 @@ type UserCreateParams = {
   uuid: string;
   name: string;
   email: string;
+  icon: string;
 };
 
 export const create = async (params: UserCreateParams) => {
@@ -20,4 +21,3 @@ export const show = async (id: string) => {
   const data = response.data as User;
   return data;
 };
-

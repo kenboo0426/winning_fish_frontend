@@ -5,6 +5,7 @@ export type User = {
   email: string;
   rating: number;
   role: number;
+  icon: string;
 };
 
 export type Quiz = {
