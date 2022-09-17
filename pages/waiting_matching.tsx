@@ -8,9 +8,8 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { show, start } from '../src/api/online_match';
+import { start } from '../src/api/online_match';
 import { useShowError } from '../src/hooks/error';
-import { OnlineMatch } from '../src/interface';
 import { WebSocketContext } from '../src/utils/webSocket';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useCurrentUser } from '../src/utils/userAuth';
@@ -21,26 +20,13 @@ const WaitingMatchingPage: React.FC = () => {
   const router = useRouter();
   const currentUser = useCurrentUser();
   const { online_match_id } = router.query;
-  const [onlineMatch, setOnlineMatch] = React.useState<OnlineMatch>();
   const showError = useShowError();
-
-  const fetchOnlineMatch = React.useCallback(async () => {
-    if (!online_match_id) return;
-
-    try {
-      const response = await show(online_match_id as string);
-      setOnlineMatch(response);
-    } catch (err) {
-      showError(err);
-    }
-  }, [online_match_id, showError]);
 
   const startOnlineMatch = React.useCallback(async () => {
     if (!online_match_id) return;
 
     try {
-      const response = await start(online_match_id as string);
-      setOnlineMatch(response);
+      await start(online_match_id as string);
       router.push(`/online_match/${online_match_id}/quiz?question=1`);
     } catch (err) {
       showError(err);
@@ -58,10 +44,6 @@ const WaitingMatchingPage: React.FC = () => {
     socketrefCurrent.send(JSON.stringify(jsonDate));
     router.push('/');
   }, [currentUser, socketrefCurrent, router]);
-
-  React.useEffect(() => {
-    fetchOnlineMatch();
-  }, [fetchOnlineMatch]);
 
   return (
     <>
