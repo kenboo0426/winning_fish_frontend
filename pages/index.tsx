@@ -22,6 +22,7 @@ const Home: React.FC = () => {
         action: 'join_online_match',
         user_id: String(currentUser.id),
         user_name: currentUser.name,
+        user_icon: currentUser.icon,
       };
       socketrefCurrent.send(JSON.stringify(jsonDate));
       router.push(`/waiting_matching?online_match_id=${response.id}`);

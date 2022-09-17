@@ -12,6 +12,7 @@ export type WsUser = {
   id: number;
   name: string;
   remained_time: number;
+  icon: string;
 };
 
 type WsJsonResponse = {

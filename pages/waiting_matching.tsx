@@ -81,7 +81,7 @@ const WaitingMatchingPage: React.FC = () => {
             >
               <Avatar
                 variant="square"
-                src={user?.name}
+                src={user?.icon}
                 sx={{ width: 80, height: 80 }}
               />
               <Box
