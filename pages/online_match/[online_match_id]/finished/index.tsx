@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-import { calculateTime } from '../../../../src/api/online_match';
+import { calculateTime, finish } from '../../../../src/api/online_match';
 import { useShowError } from '../../../../src/hooks/error';
 import { OnlineMatch } from '../../../../src/interface';
 import { useCurrentUser } from '../../../../src/utils/userAuth';
@@ -47,13 +47,37 @@ const OnlineMatchFinishedPage: React.FC = () => {
     router.push('/');
   }, [router]);
 
+  const handlefinishOnlineMatch = React.useCallback(async () => {
+    if (!online_match_id) return;
+
+    try {
+      const response = await finish(online_match_id as string);
+      setOnlineMatch(response);
+    } catch (err) {
+      showError(err);
+    }
+  }, [showError, online_match_id]);
+
   React.useEffect(() => {
     calculateRemainedTime();
   }, [calculateRemainedTime]);
 
+  React.useEffect(() => {
+    if (!onlinMatchStatus?.users || !onlineMatch?.online_match_joined_users)
+      return;
+
+    if (
+      onlinMatchStatus.users.length ==
+        onlineMatch.online_match_joined_users.length &&
+      onlineMatch.status != 'finished'
+    ) {
+      handlefinishOnlineMatch();
+    }
+  }, [handlefinishOnlineMatch, onlineMatch, onlinMatchStatus]);
+
   const sortUsers = () => {
     onlinMatchStatus?.users?.map((user) => {
-      onlineMatch?.online_match_joined_users.forEach((joined_user) => {
+      onlineMatch?.online_match_joined_users?.forEach((joined_user) => {
         if (joined_user.user_id == user.id) {
           joined_user.remained_time = user.remained_time;
         }

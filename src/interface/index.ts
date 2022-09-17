@@ -45,6 +45,7 @@ export type OnlineMatch = {
   started_at: Date;
   finished_at: Date;
   created_at: Date;
+  status: string;
   online_match_joined_users: OnlineMatchJoinedUser[];
   online_match_asked_quizzes: OnlineMatchAskedQuiz[];
 };
