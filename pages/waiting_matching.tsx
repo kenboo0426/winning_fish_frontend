@@ -27,11 +27,16 @@ const WaitingMatchingPage: React.FC = () => {
 
     try {
       await start(online_match_id as string);
+
+      const jsonDate = {
+        action: 'start_online_match',
+      };
+      socketrefCurrent.send(JSON.stringify(jsonDate));
       router.push(`/online_match/${online_match_id}/quiz?question=1`);
     } catch (err) {
       showError(err);
     }
-  }, [showError, router, online_match_id]);
+  }, [showError, router, online_match_id, socketrefCurrent]);
 
   const handleCancelOnlineMatch = React.useCallback(() => {
     if (!currentUser) return;
@@ -45,6 +50,12 @@ const WaitingMatchingPage: React.FC = () => {
     router.push('/');
   }, [currentUser, socketrefCurrent, router]);
 
+  React.useEffect(() => {
+    if (onlinMatchStatus?.action == 'start_online_match') {
+      router.push(`/online_match/${online_match_id}/quiz?question=1`);
+    }
+  }, [router, online_match_id, onlinMatchStatus?.action]);
+  
   return (
     <>
       <Box
