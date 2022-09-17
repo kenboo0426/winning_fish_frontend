@@ -139,6 +139,7 @@ const OnlineMatchFinishedPage: React.FC = () => {
                   key={index}
                   rank={index + 1}
                   userName={joined_user?.user?.name}
+                  icon={joined_user?.user?.icon}
                   remainedTime={joined_user?.remained_time}
                   existUser={!!joined_user}
                 />

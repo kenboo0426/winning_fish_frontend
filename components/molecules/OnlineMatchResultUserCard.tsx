@@ -1,9 +1,16 @@
-import { Box, Typography, Button, CircularProgress } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Button,
+  CircularProgress,
+  Avatar,
+} from '@mui/material';
 import React from 'react';
 
 type Props = {
   rank: number;
   userName?: string;
+  icon?: string;
   remainedTime?: number;
   existUser: boolean;
 };
@@ -11,6 +18,7 @@ type Props = {
 const OnlineMatchResultUserCard: React.FC<Props> = ({
   rank,
   userName,
+  icon,
   remainedTime,
   existUser,
 }) => {
@@ -44,50 +52,62 @@ const OnlineMatchResultUserCard: React.FC<Props> = ({
           {rank == 3 && 'rd.'}
           {rank == 4 && 'th.'}
         </Typography>
-        <Typography
-          sx={{
-            color: existUser ? 'black' : '#656567',
-            width: '100%',
-            fontSize: 20,
-            fontWeight: 900,
-          }}
-        >
-          {existUser ? userName : 'ユーザーなし'}
-        </Typography>
-        {existUser && !remainedTime && (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-              ml: 2,
-            }}
-          >
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {existUser && (
+              <Avatar
+                src={icon}
+                variant="square"
+                sx={{ width: 40, height: 40, ml: 1 }}
+              />
+            )}
+
             <Typography
               sx={{
-                color: 'black',
-                width: '100%',
+                color: existUser ? 'black' : '#656567',
+                ml: 2,
                 fontSize: 20,
                 fontWeight: 900,
               }}
             >
-              スコア：
+              {existUser ? userName : 'ユーザーなし'}
             </Typography>
-            <CircularProgress color="inherit" />
           </Box>
-        )}
-        {existUser && remainedTime && (
-          <Typography
-            sx={{
-              color: 'black',
-              width: '100%',
-              fontSize: 20,
-              fontWeight: 900,
-            }}
-          >
-            スコア：{remainedTime}点
-          </Typography>
-        )}
+          {existUser && !remainedTime && (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+                ml: 2,
+              }}
+            >
+              <Typography
+                sx={{
+                  color: 'black',
+                  width: '100%',
+                  fontSize: 17,
+                  fontWeight: 900,
+                }}
+              >
+                スコア：
+              </Typography>
+              <CircularProgress color="inherit" />
+            </Box>
+          )}
+          {existUser && remainedTime && (
+            <Typography
+              sx={{
+                color: 'black',
+                width: '100%',
+                fontSize: 17,
+                fontWeight: 900,
+              }}
+            >
+              スコア：{remainedTime}点
+            </Typography>
+          )}
+        </Box>
       </Box>
     </Button>
   );
