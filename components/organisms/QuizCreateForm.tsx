@@ -18,7 +18,7 @@ type QuizWithOption = {
   option4: string;
 };
 
-const QuizCreateForm: React.FC<QuizWithOption> = () => {
+const QuizCreateForm: React.FC = () => {
   const router = useRouter();
   const [createObjectURLs, setCreateObjectURLs] = React.useState<
     { preview: string }[]
@@ -91,8 +91,15 @@ const QuizCreateForm: React.FC<QuizWithOption> = () => {
     <div className="w-75 mx-auto">
       <p className="fs-2 text-center">クイズ作成</p>
       <form onSubmit={handleSubmit(onSubmit)}>
-        {errors && <span>This field is required</span>}
-        <div {...getRootProps({ className: 'dropzone' })}>
+        {errors && (
+          <span style={{ color: 'red', fontWeight: 900 }}>
+            必須項目を入力してください
+          </span>
+        )}
+        <div
+          {...getRootProps({ className: 'dropzone' })}
+          style={{ border: '2px dashed #29020299' }}
+        >
           <input {...getInputProps()} />
           <p>Drag n drop some files here, or click to select files</p>
         </div>

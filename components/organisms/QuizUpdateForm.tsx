@@ -30,7 +30,6 @@ const QuizUpdateForm: React.FC<Props> = ({ quiz }) => {
     formState: { errors },
   } = useForm<QuizWithOption>({
     defaultValues: {
-      image: quiz.image,
       correct_id: quiz.correct_id,
       level: quiz.level,
       option1: quiz.options[0].name,
@@ -41,7 +40,7 @@ const QuizUpdateForm: React.FC<Props> = ({ quiz }) => {
   });
   const showError = useShowError();
   const [quizImage, setQuizImage] = React.useState<File>();
-  const [createObjectURL, setCreateObjectURL] = React.useState(quiz.image);
+  const [createObjectURL, setCreateObjectURL] = React.useState<string>();
 
   const handleChangeQuizImage = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +63,6 @@ const QuizUpdateForm: React.FC<Props> = ({ quiz }) => {
           imageUrl = createObjectURL;
         }
         const params = {
-          image: imageUrl!,
           level: data.level!,
           options: [
             { name: data.option1! },
@@ -72,6 +70,7 @@ const QuizUpdateForm: React.FC<Props> = ({ quiz }) => {
             { name: data.option3! },
             { name: data.option4! },
           ],
+          quiz_images: [],
         };
         await update(quiz.id, params);
         router.push('/_admin/quizzes');
