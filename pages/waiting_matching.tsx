@@ -13,10 +13,13 @@ import { useShowError } from '../src/hooks/error';
 import { OnlineMatch } from '../src/interface';
 import { WebSocketContext } from '../src/utils/webSocket';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useCurrentUser } from '../src/utils/userAuth';
 
 const WaitingMatchingPage: React.FC = () => {
-  const { onlinMatchStatus } = React.useContext(WebSocketContext);
+  const { socketrefCurrent, onlinMatchStatus } =
+    React.useContext(WebSocketContext);
   const router = useRouter();
+  const currentUser = useCurrentUser();
   const { online_match_id } = router.query;
   const [onlineMatch, setOnlineMatch] = React.useState<OnlineMatch>();
   const showError = useShowError();
@@ -44,7 +47,17 @@ const WaitingMatchingPage: React.FC = () => {
     }
   }, [showError, router, online_match_id]);
 
-  const handleCancelOnlineMatch = React.useCallback(() => {}, []);
+  const handleCancelOnlineMatch = React.useCallback(() => {
+    if (!currentUser) return;
+
+    const jsonDate = {
+      action: 'left',
+      user_id: String(currentUser.id),
+      user_name: currentUser.name,
+    };
+    socketrefCurrent.send(JSON.stringify(jsonDate));
+    router.push('/');
+  }, [currentUser, socketrefCurrent, router]);
 
   React.useEffect(() => {
     fetchOnlineMatch();
