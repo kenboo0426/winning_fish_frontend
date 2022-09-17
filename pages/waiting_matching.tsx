@@ -11,26 +11,15 @@ import React from 'react';
 import { show, start } from '../src/api/online_match';
 import { useShowError } from '../src/hooks/error';
 import { OnlineMatch } from '../src/interface';
-import { useCurrentUser } from '../src/utils/userAuth';
 import { WebSocketContext } from '../src/utils/webSocket';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const WaitingMatchingPage: React.FC = () => {
-  const { socketrefCurrent, onlinMatchStatus } =
-    React.useContext(WebSocketContext);
+  const { onlinMatchStatus } = React.useContext(WebSocketContext);
   const router = useRouter();
   const { online_match_id } = router.query;
-  const currentUser = useCurrentUser();
   const [onlineMatch, setOnlineMatch] = React.useState<OnlineMatch>();
   const showError = useShowError();
-
-  const fetchJoinedUserIDs = React.useCallback(() => {
-    if (!socketrefCurrent || !currentUser) return;
-    const jsonDate = {
-      action: 'fetch_joined_user',
-    };
-    socketrefCurrent.send(JSON.stringify(jsonDate));
-  }, [socketrefCurrent, currentUser]);
 
   const fetchOnlineMatch = React.useCallback(async () => {
     if (!online_match_id) return;
@@ -56,10 +45,6 @@ const WaitingMatchingPage: React.FC = () => {
   }, [showError, router, online_match_id]);
 
   const handleCancelOnlineMatch = React.useCallback(() => {}, []);
-
-  React.useEffect(() => {
-    fetchJoinedUserIDs();
-  }, [fetchJoinedUserIDs]);
 
   React.useEffect(() => {
     fetchOnlineMatch();

@@ -11,8 +11,7 @@ const Home: React.FC = () => {
   const currentUser = useCurrentUser();
   const router = useRouter();
   const showError = useShowError();
-  const { socketrefCurrent, onlinMatchStatus, isConnected } =
-    React.useContext(WebSocketContext);
+  const { socketrefCurrent } = React.useContext(WebSocketContext);
 
   const handleStartMatching = React.useCallback(async () => {
     if (!currentUser) return;
@@ -30,14 +29,6 @@ const Home: React.FC = () => {
       showError(err);
     }
   }, [currentUser, socketrefCurrent, router, showError]);
-
-  const fetchJoinedUserIDs = React.useCallback(() => {
-    if (!socketrefCurrent) return;
-    const jsonDate = {
-      action: 'fetch_joined_user',
-    };
-    socketrefCurrent.send(JSON.stringify(jsonDate));
-  }, [socketrefCurrent]);
 
   // React.useEffect(() => {
   //   console.log("vvvvvvvvv")
