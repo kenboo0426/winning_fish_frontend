@@ -2,7 +2,7 @@ import React from 'react';
 import {
   loginByGoogleAuth,
   signOutFromGoogleAuth,
-} from '../src/utils/userAuth';
+} from '../../src/utils/userAuth';
 import { NotificationStateContext } from './Notification';
 
 const Login: React.FC = () => {

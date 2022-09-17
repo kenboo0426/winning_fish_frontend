@@ -1,5 +1,9 @@
-.container {
-  padding: 0 2rem;
+.body {
+  background-image: url("../public/images/top_image.png");
+  background-color:rgba(66,184,248,0.8);
+  background-blend-mode:lighten;
+  background-size: contain;
+  min-height: 90vh;
 }
 
 .main {

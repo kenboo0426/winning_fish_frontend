@@ -2,13 +2,11 @@ import React from 'react';
 import {
   loginByGoogleAuth,
   signOutFromGoogleAuth,
-  useCurrentUser,
-} from '../src/utils/userAuth';
+} from '../../src/utils/userAuth';
 import { NotificationStateContext } from './Notification';
 
-const Navbar: React.FC = () => {
+const SignUp: React.FC = () => {
   const { setNotify } = React.useContext(NotificationStateContext);
-  const currentUser = useCurrentUser();
 
   const handleCreateUser = React.useCallback(() => {
     loginByGoogleAuth();
@@ -25,13 +23,10 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      {currentUser ? (
-        <button onClick={handleSignout}>ログアウト</button>
-      ) : (
-        <button onClick={handleCreateUser}>ログイン</button>
-      )}
+      <button onClick={handleCreateUser}>ログイン</button>
+      <button onClick={handleSignout}>ログアウト</button>
     </>
   );
 };
 
-export default Navbar;
+export default SignUp;

@@ -4,11 +4,10 @@ import {
   getRedirectResult,
   signOut,
   UserCredential,
-  onAuthStateChanged,
 } from 'firebase/auth';
 import React from 'react';
-import { NotificationStateContext } from '../../components/Notification';
-import { show, create } from '../api/user';
+import { NotificationStateContext } from '../../components/organisms/Notification';
+import { create } from '../api/user';
 import { User } from '../interface';
 import { auth } from './firebase';
 
@@ -41,6 +40,7 @@ export const UserAuthProvider: React.FC<Props> = (props) => {
           uuid: user.uid,
           name: user.displayName!,
           email: user.email!,
+          icon: user.photoURL!,
         };
         const response = await create(params);
         setCurrentUser(response);
@@ -63,23 +63,6 @@ export const UserAuthProvider: React.FC<Props> = (props) => {
       </AuthContext.Provider>
     </>
   );
-};
-
-export const useFetchCurrentUser = () => {
-  const { setCurrentUser } = React.useContext(AuthContext);
-  const currentUser = useCurrentUser();
-  const fetchCurrentUser = React.useCallback(async () => {
-    onAuthStateChanged(auth, async (user) => {
-      if (!user && currentUser) {
-        setCurrentUser(null);
-      } else if (user && !currentUser) {
-        const response = await show(user.uid);
-        setCurrentUser(response);
-      }
-    });
-  }, [setCurrentUser, currentUser]);
-
-  return fetchCurrentUser;
 };
 
 export const useCurrentUser = () => {

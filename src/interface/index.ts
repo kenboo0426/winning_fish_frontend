@@ -5,6 +5,7 @@ export type User = {
   email: string;
   rating: number;
   role: number;
+  icon: string;
 };
 
 export type Quiz = {
@@ -44,6 +45,7 @@ export type OnlineMatch = {
   started_at: Date;
   finished_at: Date;
   created_at: Date;
+  status: string;
   online_match_joined_users: OnlineMatchJoinedUser[];
   online_match_asked_quizzes: OnlineMatchAskedQuiz[];
 };
@@ -56,6 +58,7 @@ export type OnlineMatchJoinedUser = {
   remained_time: number;
   miss_answerd_count: number;
   score: number;
+  user: User;
 };
 
 export type OnlineMatchAskedQuiz = {

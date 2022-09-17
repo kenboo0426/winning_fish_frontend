@@ -1,5 +1,5 @@
 import React from 'react';
-import { NotificationStateContext } from '../../components/Notification';
+import { NotificationStateContext } from '../../components/organisms/Notification';
 
 export const useShowError = () => {
   const { setNotify } = React.useContext(NotificationStateContext);

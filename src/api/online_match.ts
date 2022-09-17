@@ -30,3 +30,10 @@ export const calculateTime = async (id: string, user_id: number) => {
   const data = response.data as OnlineMatch;
   return data;
 };
+
+export const finish = async (id: string) => {
+  const response = await apiClient.post(`/online_match/finish/${id}`);
+
+  const data = response.data as OnlineMatch;
+  return data;
+};

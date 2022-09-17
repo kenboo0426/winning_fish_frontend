@@ -1,8 +1,8 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import React from 'react';
-import { useShowError } from '../src/hooks/error';
-import { create } from '../src/api/quiz';
-import { uploadImage } from '../src/api/uploadImage';
+import { useShowError } from '../../src/hooks/error';
+import { create } from '../../src/api/quiz';
+import { uploadImage } from '../../src/api/uploadImage';
 import { useRouter } from 'next/router';
 import { Form } from 'react-bootstrap';
 import { useDropzone } from 'react-dropzone';
