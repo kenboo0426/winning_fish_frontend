@@ -8,8 +8,14 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { WebSocketProvider } from '../src/utils/webSocket';
 import TopNavbar from '../components/organisms/TopNavBar';
+import SuggestOpenByMobile from '../components/organisms/SuggestOpenByMobile';
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
+  let isMobile: boolean = false;
+  if (typeof window == 'object') {
+    isMobile = !!window.navigator.userAgent.match(/iPhone/);
+  }
+
   return (
     <div className={styles.body}>
       <Head>
@@ -30,9 +36,15 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
       <NotificationProvider>
         <UserAuthProvider>
           <WebSocketProvider>
-            <MyappInit />
-            <TopNavbar />
-            <Component {...pageProps} />
+            {isMobile ? (
+              <>
+                <MyappInit />
+                <TopNavbar />
+                <Component {...pageProps} />
+              </>
+            ) : (
+              <SuggestOpenByMobile />
+            )}
           </WebSocketProvider>
         </UserAuthProvider>
       </NotificationProvider>
