@@ -30,6 +30,7 @@ const WaitingMatchingPage: React.FC = () => {
 
       const jsonDate = {
         action: 'start_online_match',
+        online_match_id: online_match_id,
       };
       socketrefCurrent.send(JSON.stringify(jsonDate));
       router.push(`/online_match/${online_match_id}/quiz?question=1`);
@@ -39,23 +40,24 @@ const WaitingMatchingPage: React.FC = () => {
   }, [showError, router, online_match_id, socketrefCurrent]);
 
   const handleCancelOnlineMatch = React.useCallback(() => {
-    if (!currentUser) return;
+    if (!currentUser || !online_match_id) return;
 
     const jsonDate = {
       action: 'left',
       user_id: String(currentUser.id),
       user_name: currentUser.name,
+      online_match_id: Number(online_match_id),
     };
     socketrefCurrent.send(JSON.stringify(jsonDate));
     router.push('/');
-  }, [currentUser, socketrefCurrent, router]);
+  }, [currentUser, socketrefCurrent, router, online_match_id]);
 
   React.useEffect(() => {
     if (onlinMatchStatus?.action == 'start_online_match') {
       router.push(`/online_match/${online_match_id}/quiz?question=1`);
     }
   }, [router, online_match_id, onlinMatchStatus?.action]);
-  
+
   return (
     <>
       <Box

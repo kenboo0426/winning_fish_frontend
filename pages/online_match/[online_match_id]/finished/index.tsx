@@ -39,6 +39,7 @@ const OnlineMatchFinishedPage: React.FC = () => {
         user_name: currentUser.name,
         user_icon: currentUser.icon,
         remained_time: user.remained_time,
+        online_match_id: online_match_id,
       };
       socketrefCurrent.send(JSON.stringify(jsonDate));
     } catch (err) {
