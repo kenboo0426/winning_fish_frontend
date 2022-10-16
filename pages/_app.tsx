@@ -3,17 +3,19 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { NotificationProvider } from '../components/organisms/Notification';
 import styles from '../styles/Home.module.css';
-import {
-  useCurrentUser,
-  useCurrentUserLoading,
-  UserAuthProvider,
-} from '../src/utils/userAuth';
+import { useCurrentUser, UserAuthProvider } from '../src/utils/userAuth';
 import React from 'react';
 import { useRouter } from 'next/router';
-import { WebSocketProvider, WebSocketContext } from '../src/utils/webSocket';
+import { WebSocketProvider } from '../src/utils/webSocket';
 import TopNavbar from '../components/organisms/TopNavBar';
+import SuggestOpenByMobile from '../components/organisms/SuggestOpenByMobile';
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
+  let isMobile: boolean = false;
+  if (typeof window == 'object') {
+    isMobile = !!window.navigator.userAgent.match(/iPhone/);
+  }
+
   return (
     <div className={styles.body}>
       <Head>
@@ -34,9 +36,15 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
       <NotificationProvider>
         <UserAuthProvider>
           <WebSocketProvider>
-            <MyappInit />
-            <TopNavbar />
-            <Component {...pageProps} />
+            {isMobile ? (
+              <>
+                <MyappInit />
+                <TopNavbar />
+                <Component {...pageProps} />
+              </>
+            ) : (
+              <SuggestOpenByMobile />
+            )}
           </WebSocketProvider>
         </UserAuthProvider>
       </NotificationProvider>
@@ -47,17 +55,13 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
 const MyappInit: React.FC = () => {
   const currentUser = useCurrentUser();
   const router = useRouter();
-  const currentUserLoading = useCurrentUserLoading();
-  const { socketrefCurrent, onlinMatchStatus, isConnected } =
-    React.useContext(WebSocketContext);
+  const isAdmin = router.asPath.startsWith('/_admin');
 
-  // console.log(onlinMatchStatus?.users, 'onlinMatchStatusonlinMatchStatus');
-
-  // React.useEffect(() => {
-  //   if (!currentUserLoading && !currentUser) {
-  //     router.push('/login');
-  //   }
-  // }, [router, currentUser, currentUserLoading]);
+  React.useEffect(() => {
+    if (isAdmin && currentUser && currentUser.role !== 1) {
+      router.push('/');
+    }
+  }, [router, currentUser, isAdmin]);
 
   return null;
 };

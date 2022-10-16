@@ -4,7 +4,10 @@ import { calculateTime, finish } from '../../../../src/api/online_match';
 import { useShowError } from '../../../../src/hooks/error';
 import { OnlineMatch } from '../../../../src/interface';
 import { useCurrentUser } from '../../../../src/utils/userAuth';
-import { WebSocketContext } from '../../../../src/utils/webSocket';
+import {
+  WebSocketContext,
+  WsRequestFinishedOnlineMatch,
+} from '../../../../src/utils/webSocket';
 import { Box, Typography, Button } from '@mui/material';
 import OnlineMatchResultUserCard from '../../../../components/molecules/OnlineMatchResultUserCard';
 import WaitingFinishAllUserCard from '../../../../components/molecules/WaitingFinishAllUserCard';
@@ -33,11 +36,13 @@ const OnlineMatchFinishedPage: React.FC = () => {
       );
       if (!user) return;
 
-      const jsonDate = {
+      const jsonDate: WsRequestFinishedOnlineMatch = {
         action: 'finished_online_match',
         user_id: String(currentUser.id),
         user_name: currentUser.name,
+        user_icon: currentUser.icon,
         remained_time: user.remained_time,
+        online_match_id: Number(online_match_id),
       };
       socketrefCurrent.send(JSON.stringify(jsonDate));
     } catch (err) {
@@ -139,6 +144,7 @@ const OnlineMatchFinishedPage: React.FC = () => {
                   key={index}
                   rank={index + 1}
                   userName={joined_user?.user?.name}
+                  icon={joined_user?.user?.icon}
                   remainedTime={joined_user?.remained_time}
                   existUser={!!joined_user}
                 />

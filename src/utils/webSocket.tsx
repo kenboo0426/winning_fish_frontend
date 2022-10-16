@@ -22,6 +22,39 @@ type WsJsonResponse = {
   online_match: OnlineMatch;
 };
 
+export type WsRequestJoinOnlineMatch = {
+  action: string;
+  user_id: string;
+  user_name: string;
+  remained_time: number;
+  user_icon: string;
+  online_match_id: number;
+};
+
+export type WsRequestStartOnlineMatch = {
+  action: string;
+  online_match_id: number;
+};
+
+export type WsRequestFetchJoinedUser = {
+  action: string;
+  online_match_id: number;
+};
+
+export type WsRequestFinishedOnlineMatch = {
+  action: string;
+  user_id: string;
+  user_name: string;
+  remained_time: number;
+  user_icon: string;
+  online_match_id: number;
+};
+
+export type WsRequestLeft = {
+  action: string;
+  online_match_id: number;
+};
+
 type Props = {
   children: React.ReactNode;
 };
@@ -29,6 +62,7 @@ type Props = {
 type WebSocketStatus = {
   socketrefCurrent: ReconnectingWebSocket;
   isConnected: boolean;
+  setIsConnected: (isConnected: boolean) => void;
   onlinMatchStatus: WsJsonResponse | undefined;
 };
 
@@ -49,15 +83,20 @@ export const WebSocketProvider: React.FC<Props> = ({ children }) => {
       { minReconnectionDelay: 3000 }
     );
     socketRef.current.onopen = function () {
+      console.log('connected');
       setIsConnected(true);
-      console.log('Connected');
     };
     socketRef.current.onclose = function () {
       console.log('closed');
       setIsConnected(false);
     };
 
+    socketRef.current.onerror = function (error) {
+      console.log(error, 'error');
+    };
+
     socketRef.current.onmessage = function (event) {
+      console.log('receive message');
       setOnlinMatchStatuse(JSON.parse(event.data));
     };
   }, []);
@@ -73,7 +112,7 @@ export const WebSocketProvider: React.FC<Props> = ({ children }) => {
       if (router.pathname != '/waiting_matching')
         router.push('/waiting_matching');
     }
-  }, [onlinMatchStatus, currentUser, router]);
+  }, [onlinMatchStatus, currentUser, router, isConnected]);
 
   if (!socketrefCurrent) return <></>;
   return (
@@ -81,6 +120,7 @@ export const WebSocketProvider: React.FC<Props> = ({ children }) => {
       value={{
         socketrefCurrent,
         isConnected,
+        setIsConnected,
         onlinMatchStatus,
       }}
     >
