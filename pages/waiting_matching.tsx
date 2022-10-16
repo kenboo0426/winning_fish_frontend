@@ -10,15 +10,17 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { start } from '../src/api/online_match';
 import { useShowError } from '../src/hooks/error';
-import { WebSocketContext } from '../src/utils/webSocket';
+import {
+  WebSocketContext,
+  WsRequestLeft,
+  WsRequestStartOnlineMatch,
+} from '../src/utils/webSocket';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useCurrentUser } from '../src/utils/userAuth';
 
 const WaitingMatchingPage: React.FC = () => {
   const { socketrefCurrent, onlinMatchStatus } =
     React.useContext(WebSocketContext);
   const router = useRouter();
-  const currentUser = useCurrentUser();
   const { online_match_id } = router.query;
   const showError = useShowError();
 
@@ -28,9 +30,9 @@ const WaitingMatchingPage: React.FC = () => {
     try {
       await start(online_match_id as string);
 
-      const jsonDate = {
+      const jsonDate: WsRequestStartOnlineMatch = {
         action: 'start_online_match',
-        online_match_id: online_match_id,
+        online_match_id: Number(online_match_id),
       };
       socketrefCurrent.send(JSON.stringify(jsonDate));
       router.push(`/online_match/${online_match_id}/quiz?question=1`);
@@ -40,17 +42,15 @@ const WaitingMatchingPage: React.FC = () => {
   }, [showError, router, online_match_id, socketrefCurrent]);
 
   const handleCancelOnlineMatch = React.useCallback(() => {
-    if (!currentUser || !online_match_id) return;
+    if (!online_match_id) return;
 
-    const jsonDate = {
+    const jsonDate: WsRequestLeft = {
       action: 'left',
-      user_id: String(currentUser.id),
-      user_name: currentUser.name,
       online_match_id: Number(online_match_id),
     };
     socketrefCurrent.send(JSON.stringify(jsonDate));
     router.push('/');
-  }, [currentUser, socketrefCurrent, router, online_match_id]);
+  }, [socketrefCurrent, router, online_match_id]);
 
   React.useEffect(() => {
     if (onlinMatchStatus?.action == 'start_online_match') {

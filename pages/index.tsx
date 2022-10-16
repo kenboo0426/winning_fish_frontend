@@ -4,7 +4,10 @@ import React from 'react';
 import { joinOrCreate } from '../src/api/online_match';
 import { useShowError } from '../src/hooks/error';
 import { useCurrentUser } from '../src/utils/userAuth';
-import { WebSocketContext } from '../src/utils/webSocket';
+import {
+  WebSocketContext,
+  WsRequestJoinOnlineMatch,
+} from '../src/utils/webSocket';
 import Image from 'react-bootstrap/Image';
 
 const Home: React.FC = () => {
@@ -18,10 +21,11 @@ const Home: React.FC = () => {
 
     try {
       const response = await joinOrCreate(currentUser.id);
-      const jsonDate = {
+      const jsonDate: WsRequestJoinOnlineMatch = {
         action: 'join_online_match',
         user_id: String(currentUser.id),
         user_name: currentUser.name,
+        remained_time: 0,
         user_icon: currentUser.icon,
         online_match_id: response.id,
       };
