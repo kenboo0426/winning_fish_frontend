@@ -9,6 +9,8 @@ import { useRouter } from 'next/router';
 import { WebSocketProvider } from '../src/utils/webSocket';
 import TopNavbar from '../components/organisms/TopNavBar';
 import SuggestOpenByMobile from '../components/organisms/SuggestOpenByMobile';
+import Cookies from 'js-cookie';
+import { createUuid } from '../src/utils/uuid';
 
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }) => {
   let isMobile: boolean = false;
@@ -56,6 +58,11 @@ const MyappInit: React.FC = () => {
   const currentUser = useCurrentUser();
   const router = useRouter();
   const isAdmin = router.asPath.startsWith('/_admin');
+
+  if (!Cookies.get('guest_user_id')) {
+    const newUUID = createUuid();
+    Cookies.set('guest_user_id', newUUID);
+  }
 
   React.useEffect(() => {
     if (isAdmin && currentUser && currentUser.role !== 1) {
