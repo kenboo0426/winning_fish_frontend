@@ -1,7 +1,7 @@
 import { OnlineMatch } from '../interface';
 import { apiClient } from './apiClient';
 
-export const joinOrCreate = async (user_id: number) => {
+export const joinOrCreate = async (user_id: string) => {
   const response = await apiClient.post(`/online_match?user_id=${user_id}`);
 
   const data = response.data as OnlineMatch;
