@@ -154,7 +154,13 @@ const WaitingMatchingPage: React.FC = () => {
             color="success"
             variant="contained"
             onClick={startOnlineMatch}
-            sx={{ border: '1mm ridge #14150399' }}
+            sx={{
+              border: '1mm ridge #14150399',
+              ':disabled': { bgcolor: '#5d5f5daa', color: 'black' },
+            }}
+            disabled={
+              !(onlinMatchStatus?.users && onlinMatchStatus.users.length >= 2)
+            }
           >
             参加者を待たずにスタート
           </Button>
