@@ -27,7 +27,7 @@ export const UserAuthProvider: React.FC<Props> = (props) => {
   const [currentUser, setCurrentUser] = React.useState<
     User | undefined | null
   >();
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(true);
   const { setNotify } = React.useContext(NotificationStateContext);
 
   React.useEffect(() => {
@@ -41,6 +41,7 @@ export const UserAuthProvider: React.FC<Props> = (props) => {
           name: user.displayName!,
           email: user.email!,
           icon: user.photoURL!,
+          role: 0,
         };
         const response = await create(params);
         setCurrentUser(response);
