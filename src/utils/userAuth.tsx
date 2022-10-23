@@ -10,6 +10,8 @@ import { NotificationStateContext } from '../../components/organisms/Notificatio
 import { create } from '../api/user';
 import { User } from '../interface';
 import { auth } from './firebase';
+import Cookie from 'js-cookie';
+import { useShowError } from '../hooks/error';
 
 type AuthState = {
   currentUser: User | undefined | null;
@@ -29,11 +31,36 @@ export const UserAuthProvider: React.FC<Props> = (props) => {
   >();
   const [loading, setLoading] = React.useState<boolean>(true);
   const { setNotify } = React.useContext(NotificationStateContext);
+  const showError = useShowError();
+
+  const findOrCreateGuestUser = React.useCallback(
+    async (user_cookie_id: string) => {
+      try {
+        const params = {
+          uuid: user_cookie_id,
+          name: 'ゲスト',
+          email: '',
+          icon: '',
+          role: 2,
+        };
+        const response = await create(params);
+        setCurrentUser(response);
+        setNotify({
+          type: 'success',
+          message: 'ログインしました',
+          open: true,
+        });
+      } catch (err) {
+        showError(err);
+      }
+    },
+    [showError, setNotify]
+  );
 
   React.useEffect(() => {
     return auth.onAuthStateChanged(async (user) => {
       setLoading(true);
-      if (!user && currentUser) {
+      if (!user && currentUser && currentUser.role != 2) {
         setCurrentUser(null);
       } else if (user && !currentUser) {
         const params = {
@@ -54,6 +81,13 @@ export const UserAuthProvider: React.FC<Props> = (props) => {
       setLoading(false);
     });
   }, [currentUser, setNotify]);
+
+  React.useEffect(() => {
+    if (!currentUser && !loading && Cookie.get('guest_user_id')) {
+      const user_cookie_id = Cookie.get('guest_user_id') as string;
+      findOrCreateGuestUser(user_cookie_id);
+    }
+  }, [findOrCreateGuestUser, currentUser, loading]);
 
   return (
     <>
