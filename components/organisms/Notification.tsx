@@ -29,7 +29,7 @@ export const NotificationProvider: React.FC<Props> = ({ children }) => {
   });
 
   const handleCloseNotify = React.useCallback(
-    (event?: React.SyntheticEvent, reason?: string) => {
+    (event?: React.SyntheticEvent | Event, reason?: string) => {
       if (reason === 'clickaway') {
         return;
       }
@@ -47,8 +47,8 @@ export const NotificationProvider: React.FC<Props> = ({ children }) => {
     >
       <Snackbar
         open={notify.open}
-        autoHideDuration={20000}
-        // onClose={handleCloseNotify}
+        autoHideDuration={2000}
+        onClose={handleCloseNotify}
       >
         <Alert
           onClose={handleCloseNotify}
