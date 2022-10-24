@@ -43,13 +43,15 @@ export const UserAuthProvider: React.FC<Props> = (props) => {
           icon: '',
           role: 2,
         };
-        const response = await create(params);
-        setCurrentUser(response);
-        setNotify({
-          type: 'success',
-          message: 'ログインしました',
-          open: true,
-        });
+        const { data, status } = await create(params);
+        setCurrentUser(data);
+        if (status == 201) {
+          setNotify({
+            type: 'success',
+            message: 'ログインしました',
+            open: true,
+          });
+        }
       } catch (err) {
         showError(err);
       }
@@ -70,13 +72,15 @@ export const UserAuthProvider: React.FC<Props> = (props) => {
           icon: user.photoURL!,
           role: 0,
         };
-        const response = await create(params);
-        setCurrentUser(response);
-        setNotify({
-          type: 'success',
-          message: 'ログインしました',
-          open: true,
-        });
+        const { data, status } = await create(params);
+        setCurrentUser(data);
+        if (status == 201) {
+          setNotify({
+            type: 'success',
+            message: 'ログインしました',
+            open: true,
+          });
+        }
       }
       setLoading(false);
     });

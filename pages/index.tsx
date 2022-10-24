@@ -45,10 +45,10 @@ const Home: React.FC = () => {
           icon: '',
           role: 2,
         };
-        const user = await createUser(params);
+        const { data } = await createUser(params);
         jsonData = {
           action: 'join_online_match',
-          user_id: String(user.id),
+          user_id: String(data.id),
           user_name: 'ゲスト',
           remained_time: 0,
           user_icon: '',

@@ -13,7 +13,8 @@ export const create = async (params: UserCreateParams) => {
   const response = await apiClient.post('/user', params);
 
   const data = response.data as User;
-  return data;
+  const status = response.status;
+  return { data, status };
 };
 
 export const show = async (id: string) => {
