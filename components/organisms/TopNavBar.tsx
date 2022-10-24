@@ -51,7 +51,7 @@ const TopNavbar: React.FC = () => {
       <Divider />
       <List>
         <ListItem disablePadding>
-          {currentUser ? (
+          {currentUser && currentUser.role != 2 ? (
             <ListItemButton onClick={handleSignout}>
               <ListItemIcon>
                 <PersonIcon />

@@ -6,6 +6,7 @@ type UserCreateParams = {
   name: string;
   email: string;
   icon: string;
+  role: number;
 };
 
 export const create = async (params: UserCreateParams) => {

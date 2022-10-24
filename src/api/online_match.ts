@@ -1,8 +1,8 @@
 import { OnlineMatch } from '../interface';
 import { apiClient } from './apiClient';
 
-export const joinOrCreate = async (user_id: number) => {
-  const response = await apiClient.post(`/online_match?user_id=${user_id}`);
+export const joinOrCreate = async (user_or_guest_id: string) => {
+  const response = await apiClient.post(`/online_match?user_or_guest_id=${user_or_guest_id}`);
 
   const data = response.data as OnlineMatch;
   return data;
@@ -22,9 +22,9 @@ export const start = async (id: string) => {
   return data;
 };
 
-export const calculateTime = async (id: string, user_id: number) => {
+export const calculateTime = async (id: string, joined_user_id: number) => {
   const response = await apiClient.post(
-    `/online_match/calculate/${id}?user_id=${user_id}`
+    `/online_match/calculate/${id}?joined_user_id=${joined_user_id}`
   );
 
   const data = response.data as OnlineMatch;
