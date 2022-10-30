@@ -128,12 +128,12 @@ const Home: React.FC = () => {
             border: '2mm ridge #29020299',
           }}
         >
-          オンライン対戦をする
+          ランダムマッチング
         </Button>
         <Button
           variant="contained"
           style={{
-            backgroundColor: '#ababab',
+            backgroundColor: '#21cbed',
           }}
           size="large"
           sx={{
@@ -142,9 +142,9 @@ const Home: React.FC = () => {
             fontSize: 20,
             border: '2mm ridge #14150399',
           }}
-          // onClick={() => router.push('/setting')}
+          onClick={() => router.push('/free_match')}
         >
-          設定
+          フリーマッチング
         </Button>
       </Box>
     </Box>
