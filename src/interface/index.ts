@@ -40,7 +40,7 @@ export type QuizImage = {
 
 export type OnlineMatch = {
   id: number;
-  max_participant_number: number;
+  max_participate_number: number;
   status: string;
   question_number: number;
   with_bot: boolean;
