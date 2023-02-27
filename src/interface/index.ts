@@ -40,12 +40,15 @@ export type QuizImage = {
 
 export type OnlineMatch = {
   id: number;
-  person_number: number;
-  participants_number: number;
+  max_participate_number: number;
+  status: string;
+  question_number: number;
+  with_bot: boolean;
+  room_id: string;
   started_at: Date;
   finished_at: Date;
   created_at: Date;
-  status: string;
+  updated_at: Date;
   online_match_joined_users: OnlineMatchJoinedUser[];
   online_match_asked_quizzes: OnlineMatchAskedQuiz[];
 };

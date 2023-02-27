@@ -11,6 +11,8 @@ import {
 import Image from 'react-bootstrap/Image';
 import Cookie from 'js-cookie';
 import { create as createUser } from '../src/api/user';
+import RoomSettingDialog from '../components/organisms/RoomSettingDialog';
+import SearchRoomDialog from '../components/organisms/SearchRoomDialog';
 
 const Home: React.FC = () => {
   const currentUser = useCurrentUser();
@@ -18,6 +20,12 @@ const Home: React.FC = () => {
   const router = useRouter();
   const showError = useShowError();
   const { socketrefCurrent } = React.useContext(WebSocketContext);
+  const [isFreeMatch, setIsFreeMatch] = React.useState(false);
+  const [isFriendMatch, setIsFriendMatch] = React.useState(false);
+  const [isOpenSearchRoomDialog, setIsOpenSearchRoomDialog] =
+    React.useState(false);
+  const [isOpenRoomSettingDialog, setIsOpenRoomSettingDialog] =
+    React.useState(false);
 
   const handleStartMatching = React.useCallback(async () => {
     if (!currentUser && isLoading) return;
@@ -63,19 +71,13 @@ const Home: React.FC = () => {
     }
   }, [currentUser, isLoading, socketrefCurrent, router, showError]);
 
-  // React.useEffect(() => {
-  //   console.log("vvvvvvvvv")
-  //   if (!onlinMatchStatus || !currentUser) return;
-  //   if (
-  //     onlinMatchStatus.joined_onine_match_user_ids != null &&
-  //     onlinMatchStatus.joined_onine_match_user_ids.includes(
-  //       String(currentUser.id)
-  //     )
-  //   ) {
-  //     console.log("aaaaaaaaa")
-  //     router.push('/waiting_matching');
-  //   }
-  // }, [onlinMatchStatus, currentUser, router]);
+  const closeRoomSettingDialog = React.useCallback(() => {
+    setIsOpenRoomSettingDialog(false);
+  }, []);
+
+  const closeSearchRoomDialog = React.useCallback(() => {
+    setIsOpenSearchRoomDialog(false);
+  }, []);
 
   if (!currentUser || !socketrefCurrent) return <></>;
   return (
@@ -104,7 +106,6 @@ const Home: React.FC = () => {
           </Typography>
         </Badge>
       </Box>
-
       <Box
         sx={{
           flexDirection: 'column',
@@ -114,38 +115,118 @@ const Home: React.FC = () => {
           mx: 'auto',
         }}
       >
-        <Button
-          onClick={handleStartMatching}
-          variant="contained"
-          style={{
-            backgroundColor: '#ed2121',
-          }}
-          size="large"
-          sx={{
-            my: 1,
-            height: 80,
-            fontSize: 20,
-            border: '2mm ridge #29020299',
-          }}
-        >
-          オンライン対戦をする
-        </Button>
-        <Button
-          variant="contained"
-          style={{
-            backgroundColor: '#ababab',
-          }}
-          size="large"
-          sx={{
-            my: 1,
-            height: 80,
-            fontSize: 20,
-            border: '2mm ridge #14150399',
-          }}
-          // onClick={() => router.push('/setting')}
-        >
-          設定
-        </Button>
+        {isFreeMatch && !isFriendMatch && (
+          <>
+            <Button
+              onClick={() => setIsFriendMatch(true)}
+              variant="contained"
+              style={{
+                backgroundColor: '#ed2121',
+              }}
+              size="large"
+              sx={{
+                my: 1,
+                height: 80,
+                fontSize: 20,
+                border: '2mm ridge #29020299',
+              }}
+            >
+              知り合いと対戦
+            </Button>
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: '#21cbed',
+              }}
+              size="large"
+              sx={{
+                my: 1,
+                height: 80,
+                fontSize: 20,
+                border: '2mm ridge #14150399',
+              }}
+              // onClick={() => setIsFreeMatch(true)}
+            >
+              ソロプレイ
+            </Button>
+          </>
+        )}
+        {!isFreeMatch && (
+          <>
+            <Button
+              onClick={handleStartMatching}
+              variant="contained"
+              style={{
+                backgroundColor: '#ed2121',
+              }}
+              size="large"
+              sx={{
+                my: 1,
+                height: 80,
+                fontSize: 20,
+                border: '2mm ridge #29020299',
+              }}
+            >
+              ランダムマッチ
+            </Button>
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: '#21cbed',
+              }}
+              size="large"
+              sx={{
+                my: 1,
+                height: 80,
+                fontSize: 20,
+                border: '2mm ridge #14150399',
+              }}
+              onClick={() => setIsFreeMatch(true)}
+            >
+              フリーマッチ
+            </Button>
+          </>
+        )}
+        {isFriendMatch && (
+          <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
+            <Button
+              onClick={() => setIsOpenRoomSettingDialog(true)}
+              variant="contained"
+              style={{
+                backgroundColor: '#ed2121',
+              }}
+              sx={{
+                my: 1,
+                fontSize: 18,
+                border: '1mm solid #29020299',
+              }}
+            >
+              ルームを作成
+            </Button>
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: '#21cbed',
+              }}
+              sx={{
+                my: 1,
+                fontSize: 18,
+                border: '1mm solid #14150399',
+              }}
+              onClick={() => setIsOpenSearchRoomDialog(true)}
+            >
+              ルームを検索
+            </Button>
+          </Box>
+        )}
+        <RoomSettingDialog
+          isOpen={isOpenRoomSettingDialog}
+          closeDialog={closeRoomSettingDialog}
+        />
+        <SearchRoomDialog
+          isOpen={isOpenSearchRoomDialog}
+          closeDialog={closeSearchRoomDialog}
+        />
       </Box>
     </Box>
   );

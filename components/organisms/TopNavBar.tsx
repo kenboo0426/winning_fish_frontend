@@ -13,7 +13,10 @@ import {
   Drawer,
   Avatar,
 } from '@mui/material';
-import PersonIcon from '@mui/icons-material/Person';
+import {
+  Person as PersonIcon,
+  SettingsApplications as SettingsApplicationsIcon,
+} from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
 import React from 'react';
 import {
@@ -50,23 +53,35 @@ const TopNavbar: React.FC = () => {
       <Toolbar />
       <Divider />
       <List>
-        <ListItem disablePadding>
-          {currentUser && currentUser.role != 2 ? (
-            <ListItemButton onClick={handleSignout}>
-              <ListItemIcon>
-                <PersonIcon />
-              </ListItemIcon>
-              ログアウト
-            </ListItemButton>
-          ) : (
+        {currentUser && currentUser.role != 2 ? (
+          <>
+            <ListItem disablePadding>
+              <ListItemButton onClick={handleSignout}>
+                <ListItemIcon>
+                  <PersonIcon />
+                </ListItemIcon>
+                ログアウト
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <SettingsApplicationsIcon />
+                </ListItemIcon>
+                設定
+              </ListItemButton>
+            </ListItem>
+          </>
+        ) : (
+          <ListItem disablePadding>
             <ListItemButton onClick={handleCreateUser}>
               <ListItemIcon>
                 <PersonIcon />
               </ListItemIcon>
               ログイン
             </ListItemButton>
-          )}
-        </ListItem>
+          </ListItem>
+        )}
       </List>
       <Divider />
     </div>
